@@ -1,3 +1,9 @@
 .iconShop {
   height: 90px;
 }
+
+@media (max-width: 600px) {
+  .iconShop {
+    margin-right: 20px;
+  }
+}
