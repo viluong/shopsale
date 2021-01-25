@@ -5,11 +5,11 @@ import * as actions from '../../../store/actions/index';
 
 import classes from './ProductDetail.module.css';
 import ProductDetailSkeleton from 'components/Shop/Product/ProductDetailSkeleton/ProductDetailSkeleton';
+import * as utils from '../../../utils/utils';
 
 const productDetail = (props) => {
-  console.log("productDetail")
   const { productId } = props
-  const [ quantity, setQuantity ] = useState(0);
+  const [ quantity, setQuantity ] = useState(1);
 
   const dispatch = useDispatch()
 
@@ -19,7 +19,7 @@ const productDetail = (props) => {
 
   useEffect(() => {
     onGetProductDetail(productId)
-  }, [onGetProductDetail, productId]);
+  }, [onGetProductDetail]);
 
   const onAddQuantityProduct = () => {
     setQuantity(quantity + 1);
@@ -31,6 +31,11 @@ const productDetail = (props) => {
     }
   }
   
+  const addProductToCart = (event) => {
+    event.preventDefault()
+    dispatch(actions.addProductToCart(productId, quantity))
+  }
+
   const product = useSelector(state => state.product.product);
 
   let productDisplay = <ProductDetailSkeleton />
@@ -46,7 +51,7 @@ const productDetail = (props) => {
         </Grid>
         <Grid item xs={12} md={7}>
           <h2>{product.name}</h2>
-          <h1 className={classes.productPrice}>{product.price}</h1>
+          <h1 className={classes.productPrice}>{utils.formatCurrencyVND(product.price)}</h1>
           <div style={{ whiteSpace: "pre-wrap" }}>
             <h4>Detail</h4>
             {product.description}
@@ -91,6 +96,7 @@ const productDetail = (props) => {
             <Button
               variant="outlined"
               color="primary"
+              onClick={(event) => addProductToCart(event)}
             >
               Add Cart
             </Button>

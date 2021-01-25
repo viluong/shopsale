@@ -7,7 +7,6 @@ import Aux from 'hocs/Aux/Aux';
 import ProductHome from '../containers/Product/ProductHome/ProductHome';
 
 const home = () => {
-  console.log("home")
   return (
     <Aux>
       <Carousel />

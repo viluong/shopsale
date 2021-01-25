@@ -1,10 +1,10 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
+import { CookiesProvider } from 'react-cookie';
 
 import { wrapper } from '../store/index';
 import theme from '../configs/theme';
@@ -25,6 +25,7 @@ const myApp = (props) => {
   }, []);
 
   return (
+    <CookiesProvider>
       <React.Fragment>
         <Head>
           <title>My page</title>
@@ -40,6 +41,7 @@ const myApp = (props) => {
           </Layout>
         </ThemeProvider>
       </React.Fragment>
+    </CookiesProvider>
   );
 }
 

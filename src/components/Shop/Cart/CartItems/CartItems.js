@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,6 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { CheckBox } from '@material-ui/icons';
+import CartItem from './CartItem/CartItem';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -18,19 +21,6 @@ const StyledTableCell = withStyles((theme) => ({
     fontSize: 15,
   },
 }))(TableCell);
-
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
 const useStyles = makeStyles({
   table: {
@@ -43,13 +33,13 @@ const useStyles = makeStyles({
 });
 
 const cartItems = () => {
+  const carts = useSelector(state => state.cart.carts)
   const classes = useStyles()
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell></StyledTableCell>
             <StyledTableCell>Product</StyledTableCell>
             <StyledTableCell>Description</StyledTableCell>
             <StyledTableCell align="right">Price</StyledTableCell>
@@ -59,26 +49,8 @@ const cartItems = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
-              <StyledTableCell>
-                <CheckBox/>
-              </StyledTableCell>
-              <StyledTableCell>
-                <img
-                  src='https://product.hstatic.net/1000383440/product/62105201_1821444534666118_5397009136254713856_n_dacf1cbb56554dcca7e569b7edae4f29_master.jpg'
-                  alt=''
-                  className={classes.imageTable} 
-                  />
-              </StyledTableCell>
-              <StyledTableCell component="th" scope="row">
-                {row.name}
-              </StyledTableCell>
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
-              <StyledTableCell align="right">{row.fat}</StyledTableCell>
-              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-              <StyledTableCell align="right">{row.protein}</StyledTableCell>
-            </TableRow>
+          {carts.map((row, index) => (
+            <CartItem cart={row} key={index}/>
           ))}
         </TableBody>
       </Table>

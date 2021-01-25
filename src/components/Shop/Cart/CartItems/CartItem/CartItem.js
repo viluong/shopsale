@@ -1,44 +1,59 @@
-import React from 'react';
-import { CheckBox } from '@material-ui/icons';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import TableRow from '@material-ui/core/TableRow';
-import { StyledTableCell } from '../CartItems';
+import TableCell from '@material-ui/core/TableCell';
 import classes from './CartItem.module.css';
+import * as utils from 'utils/utils';
+import * as action from 'store/actions/index';
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: '#00acc1',
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 15,
+  },
+}))(TableCell);
 
 const cartItem = (props) => {
-  const row = props.row
-  const [checked, setChecked] = React.useState(true);
+  const dispatch = useDispatch()
+  const row = props.cart
+  const [quantity, setQuantity ] = useState(row.quantity)
 
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-  };
+  const onChangeQuantity = (event) => {
+    event.preventDefault()
+    if (event.target.value >= 0) {
+      setQuantity(event.target.value)
+      dispatch(action.addProductToCart(row.product.id, event.target.value))
+    }
+  }
+  const removeProductCart = (productId) => {
+    dispatch(action.removeProductCart(productId))
+  }
   return (
-    <TableRow key={row.name}>
-      <StyledTableCell>
-        <Checkbox
-          checked={checked}
-          onChange={handleChange}
-          inputProps={{ 'aria-label': 'primary checkbox' }}
-        />
-      </StyledTableCell>
+    <TableRow key={row.product.name}>
       <StyledTableCell>
         <img
-          src='https://product.hstatic.net/1000383440/product/62105201_1821444534666118_5397009136254713856_n_dacf1cbb56554dcca7e569b7edae4f29_master.jpg'
+          src={row.product.image}
           alt=''
           className={classes.imageTable} 
           />
       </StyledTableCell>
       <StyledTableCell component="th" scope="row">
-        {row.name}
+        {row.product.name}
       </StyledTableCell>
-      <StyledTableCell align="right">{row.calories}</StyledTableCell>
-      <StyledTableCell align="right">{row.fat}</StyledTableCell>
-      <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-      <StyledTableCell align="right">{row.protein}</StyledTableCell>
+      <StyledTableCell align="right">{utils.formatCurrencyVND(row.product.price)}</StyledTableCell>
+      <StyledTableCell align="right"><TextField className={classes.inputNumber} required id="standard-basic" type="number" value={quantity} onChange={(event) => onChangeQuantity(event)} variant="outlined" id="outlined-number"/></StyledTableCell>
+      <StyledTableCell align="right">{utils.subtotalItem(row.product.price, quantity)}</StyledTableCell>
+      <StyledTableCell align="right">          
+        <IconButton edge="end" aria-label="delete" onClick={() => removeProductCart(row.product.id)}>
+          <DeleteIcon />
+        </IconButton></StyledTableCell>
     </TableRow>
   );
 }

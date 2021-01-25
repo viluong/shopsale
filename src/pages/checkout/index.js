@@ -1,9 +1,9 @@
 import React from 'react';
-import CheckoutForm from '../../components/Shop/CheckoutForm/CheckoutForm';
+import Checkout from 'containers/Checkout/Checkout';
 
 const checkout = () => {
   return (
-    <CheckoutForm />
+    <Checkout />
   );
 }
 

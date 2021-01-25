@@ -6,7 +6,6 @@ import * as actions from '../../../store/actions/index';
 import ProductSkeletons from '../../../components/Shop/Product/ProductSkeletons/ProductSkeletons';
 
 const productHome = () => {
-  console.log("productHome")
   const dispatch = useDispatch();
   
   const products = useSelector(state => state.product.products);

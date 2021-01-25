@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { Skeleton } from "@material-ui/lab";
 
 import Link from 'components/UI/Link/Link';
+import * as utils from '../../../../../utils/utils';
 
 const useStyles = makeStyles({
   root: {
@@ -68,7 +69,7 @@ const productCard = ({ product }) => {
                 {product.name}
               </Typography>
               <Typography variant="body2" color="textSecondary" component="p" className={classes.body}>
-                {product.price}
+                {utils.formatCurrencyVND(product.price)}
                 <span style={{ color: "grey" }}>Quantity: {product.quantity}</span>
             </Typography>
             </CardContent>

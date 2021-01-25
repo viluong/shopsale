@@ -35,7 +35,7 @@ export const initProducts = () => {
     axios.get('/products/').then( res => {
       dispatch(fetchProduct(res.data));
     }).catch( error => {
-      dispatch(fetchProductFailed(error.message))
+      dispatch(fetchProductFailed(error))
     })
   }
 }
@@ -45,7 +45,7 @@ export const getProductDetail = (id) => {
     axios.get(`/products/${id}/`).then( res => {
       dispatch(getProduct(res.data))
     }).catch( error => {
-      dispatch(getProductFailed(error.message))
+      dispatch(getProductFailed(error))
     })
   }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Stepper from '@material-ui/core/Stepper';
@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import AddressForm from '../AddressForm/AddressForm';
 import PaymentForm from '../PaymentForm/PaymentForm';
 import Review from '../ReviewOrder/ReviewOrder';
+import * as actions from 'store/actions/index'
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -31,26 +33,55 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const steps = ['Shipping address', 'Payment details', 'Review your order'];
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <PaymentForm />;
-    case 2:
-      return <Review />;
-    default:
-      throw new Error('Unknown step');
-  }
-}
 
 const checkoutForm = () => {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
+  const [addressForm, setAddressForm] = React.useState(null);
+  const [isNext, setIsNext] = React.useState(false);
+
+  const onInitAddress = useCallback(() => {
+    dispatch(actions.getAddress())
+  }, [dispatch]);
+
+  useEffect(() => {
+    onInitAddress()
+  }, [onInitAddress]);
+
+  const changeAddressForm = (data) => {
+    setAddressForm(data)
+  }
+
+  const changeIsNext = (isNext) => {
+    setIsNext(isNext)
+  }
+
+  const storeAddress = (addressForm) => {
+    console.log("storeAddress", addressForm)
+    dispatch(actions.storeAddress(addressForm))
+  }
+
+  const steps = ['Shipping address', 'Payment details', 'Review your order'];
+  
+  const getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return <AddressForm onChangeIsNext={changeIsNext} onChangeAddressForm={changeAddressForm} />;
+      case 1:
+        return <PaymentForm />;
+      case 2:
+        return <Review />;
+      default:
+        throw new Error('Unknown step');
+    }
+  }
 
   const handleNext = () => {
+    if (activeStep === 0) {
+      storeAddress(addressForm)
+    }
     setActiveStep(activeStep + 1);
   };
 
@@ -95,6 +126,7 @@ const checkoutForm = () => {
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
+                disabled={!isNext}
               >
                 {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
               </Button>
