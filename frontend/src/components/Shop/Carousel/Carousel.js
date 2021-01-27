@@ -2,7 +2,7 @@ import React from 'react';
 import Slider from "react-slick";
 
 import CarouselItem from './CarouselItem/CarouselItem';
-import Aux from 'hocs/Aux/Aux';
+import Aux from 'hocs/HightAux/HightAux';
 import classes from './Carousel.module.css';
 import Title from '../../UI/Title/Title';
 

@@ -2,7 +2,8 @@ import React from 'react';
 
 import useHttpErrorHandler from '../../hooks/http-error-handler';
 import Modal from '../../components/UI/Modal/Modal';
-import Aux from '../Aux/Aux';
+import Aux from 'hocs/HightAux/HightAux';
+
 
 const withErrorHandler = ( WrappedComponent, axios ) => {
     return props => {

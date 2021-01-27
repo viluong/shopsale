@@ -1,5 +1,6 @@
 import React from 'react';
-import Aux from 'hocs/Aux/Aux';
+import Aux from 'hocs/HightAux/HightAux';
+
 import classes from './Title.module.css';
 import { Toolbar } from '@material-ui/core';
 

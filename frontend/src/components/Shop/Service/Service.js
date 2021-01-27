@@ -5,7 +5,8 @@ import LocalOfferIcon from "@material-ui/icons/LocalOffer";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 
 import styles from "./service.module.css";
-import Aux from "hocs/Aux/Aux";
+import Aux from 'hocs/HightAux/HightAux';
+
 import Title from '../../UI/Title/Title';
 
 const service = () => {

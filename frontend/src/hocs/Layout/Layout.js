@@ -2,7 +2,8 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
-import Aux from '../Aux/Aux';
+import Aux from 'hocs/HightAux/HightAux';
+
 import Header from '../../components/Shop/Header/Header';
 import Footer from '../../components/Shop/Footer/Foorter';
 import * as action from '../../store/actions/index';
