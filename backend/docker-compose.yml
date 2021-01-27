@@ -1,0 +1,24 @@
+version: "3.3"
+   
+services:
+  db:
+    image: postgres
+    ports:
+      - "0.0.0.0:5432:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8001
+    volumes:
+      - .:/code
+    ports:
+      - "8001:8001"
+    depends_on:
+      - db
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
