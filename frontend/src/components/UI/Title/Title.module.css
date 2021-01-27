@@ -1,0 +1,10 @@
+.titleCategoryWraper {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgba(0,0,0,.05);
+  margin-top: 25px;
+}
+
+.titleCategory {
+  color: #00acc1;
+  text-transform: uppercase;
+}
