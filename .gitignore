@@ -32,3 +32,12 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+*.pyc
+
+.idea/
+
+backend/db.sqlite3
+
+backend/celerybeat-schedule
+node_modules/
