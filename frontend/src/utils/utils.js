@@ -29,3 +29,24 @@ export const checkValidity = ( value, rules ) => {
 
   return isValid;
 }
+
+export const formatOrderData = (address, carts) => {
+  const order = {
+    order_lines: carts.map((cart) => {
+      return {
+        product_id: cart.product.id,
+        quantity: cart.quantity,
+        price: cart.product.price
+      }
+    }),
+    delivery_fee: 0,
+    ship_name: address.firstName + " " + address.lastName,
+    ship_phone: "0213213122",
+    ship_address: address.address1,
+    ship_city: address.city,
+    ship_district: address.district,
+    payment_method: "PAYVN", 
+  }
+  console.log("order", order)
+  return order;
+}

@@ -44,7 +44,7 @@ class OrderLineView(generics.CreateAPIView):
     serializer_class = OrderLineSerializer
 
 
-class CartView(APIView):
+class   CartView(APIView):
 
     def post(self, request):
         products = get_products_from_redis(request.data['product_ids'])

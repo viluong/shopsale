@@ -1,6 +1,5 @@
 import * as actionTypes from './actionTypes';
 import axios from '../../configs/axios';
-import { EmojiObjects } from '@material-ui/icons';
 
 export const loadCartSuccess = (carts) => {
   return {
@@ -23,17 +22,9 @@ export const deleteItemCart = (productId) => {
   }
 }
 
-export const loadAddress = (address) => {
+export const clearCart = () => {
   return {
-    type: actionTypes.LOAD_ADDRESS,
-    address: address
-  }
-}
-
-export const setAllowNextStep = (isNext) => {
-  return {
-    type: actionTypes.SET_ALLOW_NEXT_STEP,
-    isNext: isNext
+    type: actionTypes.CLEAR_CART,
   }
 }
 
@@ -89,26 +80,9 @@ export const removeProductCart = (productId) => {
   }
 }
 
-export const storeAddress = (addressForm) => {
+export const clearProductsCart = () => {
   return (dispatch) => {
-    const data = {
-      firstName: addressForm.firstName.value,
-      lastName: addressForm.lastName.value,
-      address1: addressForm.address1.value,
-      address2: addressForm.address2.value,
-      city: addressForm.city.value,
-      state: addressForm.state.value,
-      zip: addressForm.zip.value,
-      country: addressForm.country.value
-    }
-    localStorage.setItem('address', JSON.stringify(data))
-    dispatch(loadAddress(data))
-  }
-}
-
-export const getAddress = () => {
-  return (dispatch) => {
-    const address = JSON.parse(localStorage.getItem('address'));
-    dispatch(loadAddress(address))
+    localStorage.removeItem('carts');
+    dispatch(clearCart())
   }
 }

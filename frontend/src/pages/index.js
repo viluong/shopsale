@@ -1,20 +1,13 @@
 import React from 'react';
-import withErrorHandler from '../hocs/withErrorHandler/withErrorHandler';
-import axios from '../configs/axios';
-import Carousel from '../components/Shop/Carousel/Carousel';
-import Service from '../components/Shop/Service/Service';
 import Aux from 'hocs/HightAux/HightAux';
+import Home from '../containers/Home/Home';
 
-import ProductHome from '../containers/Product/ProductHome/ProductHome';
-
-const home = () => {
+const homePage = () => {
   return (
     <Aux>
-      <Carousel />
-      <Service />
-      <ProductHome />
+      <Home />
     </Aux>
   );
 }
 
-export default withErrorHandler(home, axios);
+export default homePage;

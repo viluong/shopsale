@@ -7,10 +7,14 @@ export {
   initCarts,
   addProductToCart,
   removeProductCart,
+} from './cart';
+
+export {
   getAddress,
   storeAddress,
-  setAllowNextStep
-} from './cart';
+  setAllowNextStep,
+  saveOrder
+} from './order';
 
 export {
   openSignInModal,

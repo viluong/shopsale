@@ -1,10 +1,15 @@
 import { createSelector } from 'reselect'
 
-export const addressSelector = state => state.cart.address;
-
+export const cartSelector = state => state.cart;
+export const orderSelector = state => state.order;
 export const checkoutSelector = createSelector(
-  addressSelector,
-  (address) => ({
-    address: address
+  cartSelector,
+  orderSelector,
+  (cart, order) => ({
+    address: order.address,
+    carts: cart.carts,
+    loading: order.loading,
+    error: order.error,
+    orderName: order.orderName
   })
 )

@@ -10,4 +10,4 @@ from shop.tasks import cached_product_to_redis
 @receiver(post_save, sender=Product)
 def cached_product(sender, instance, created, **kwargs):
     product = instance.to_redis()
-    cached_product_to_redis.delay(product)
+    cached_product_to_redis(product)

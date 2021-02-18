@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Grid, TextField } from '@material-ui/core';
-import * as actions from '../../../store/actions/index';
-
 import classes from './ProductDetail.module.css';
 import ProductDetailSkeleton from 'components/Shop/Product/ProductDetailSkeleton/ProductDetailSkeleton';
-import * as utils from '../../../utils/utils';
+import * as utils from 'utils/utils';
+import * as actions from 'store/actions/index';
 
 const productDetail = (props) => {
   const { productId } = props

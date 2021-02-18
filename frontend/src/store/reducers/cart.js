@@ -1,10 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  carts: [],
-  address: null,
-  step: null,
-  isNext: false
+  carts: []
 }
 
 const reducer = (state = initialState, action) => {
@@ -19,15 +16,10 @@ const reducer = (state = initialState, action) => {
         ...state,
         carts: state.carts.filter((item) => item.product.id !== action.productId)
       }
-    case actionTypes.LOAD_ADDRESS:
+    case actionTypes.CLEAR_CART:
       return {
         ...state,
-        address: action.address
-      }
-    case actionTypes.SET_ALLOW_NEXT_STEP:
-      return {
-        ...state,
-        isNext: action.isNext
+        carts: []
       }
     default: return state
   }

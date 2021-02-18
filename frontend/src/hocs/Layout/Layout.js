@@ -7,6 +7,8 @@ import Aux from 'hocs/HightAux/HightAux';
 import Header from '../../components/Shop/Header/Header';
 import Footer from '../../components/Shop/Footer/Foorter';
 import * as action from '../../store/actions/index';
+import withErrorHandler from 'hocs/withErrorHandler/withErrorHandler';
+import axios from 'configs/axios';
 
 const layout = (props) => {
   const { classes } = props;
@@ -56,4 +58,4 @@ const useStyle = theme => ({
     },
   });
 
-export default withStyles(useStyle)(layout);
+export default withStyles(useStyle)(withErrorHandler(layout, axios));

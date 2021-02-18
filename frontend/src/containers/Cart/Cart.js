@@ -1,7 +1,7 @@
 import { Grid } from '@material-ui/core';
 import React from 'react';
-import Bill from '../../components/Shop/Bill/Bill';
-import CartItems from '../../components/Shop/Cart/CartItems/CartItems';
+import Bill from 'components/Shop/Bill/Bill';
+import CartItems from 'components/Shop/Cart/CartItems/CartItems';
 
 const cart = () => {
   return (

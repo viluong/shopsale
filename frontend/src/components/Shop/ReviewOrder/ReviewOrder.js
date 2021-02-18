@@ -1,14 +1,11 @@
 
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
-
-import { reviewOrderSelector } from 'selectors/ReviewOrderSelector';
 import * as utils from 'utils/utils';
 
 
@@ -24,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const reviewOrder = () => {
+const reviewOrder = (props) => {
   const classes = useStyles();
   const payments = [
     { name: 'Card type', detail: 'Visa' },
@@ -33,7 +30,10 @@ const reviewOrder = () => {
     { name: 'Expiry date', detail: '04/2024' },
   ];
   
-  const order = useSelector(reviewOrderSelector)
+  const order = {
+    address: props.address,
+    carts: props.carts
+  }
   const products = order.carts.map((item, index) => {
     return { name: item.product.name, quantity: item.quantity, desc: item.product.description.substring(0, 48) + "...", price: utils.subtotalItem(item.product.price, item.quantity) }
   })

@@ -5,8 +5,6 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import * as utils from 'utils/utils';
-import { useSelector } from 'react-redux';
-import { checkoutSelector } from 'selectors/CheckoutSelector';
 
 let initialAddress = {
   firstName: {
@@ -27,11 +25,11 @@ let initialAddress = {
     isError: '',
     label: 'Address1'
   },
-  address2: {
+  district: {
     value: '',
-    required: false,
+    required: true,
     isError: '',
-    label: 'Address2'
+    label: 'District'
   },
   city: {
     value: '',
@@ -60,7 +58,7 @@ let initialAddress = {
 }
 
 const addressForm = (props) => {
-  const { address } = useSelector(checkoutSelector)
+  const { address } = props
 
   const checkAddress = (address) => {
     if (address) {
@@ -68,6 +66,9 @@ const addressForm = (props) => {
       for (const [key, value] of Object.entries(initialAddress)) {
         initialAddress[key].value = address[key]
         isValid = utils.checkValidity(initialAddress[key].value, initialAddress[key])
+        if (!isValid) {
+          break;
+        }
       }
       if (isValid) {
         props.onChangeIsNext(true)
@@ -82,17 +83,27 @@ const addressForm = (props) => {
 
   const onChangeInput = (event, field) => {
     event.preventDefault();
-    const isValid = utils.checkValidity(event.target.value, initialAddress[field])
+    let isValid = false;
+    isValid = utils.checkValidity(event.target.value, initialAddress[field])
+    const isValidField = isValid
+    for (const [key, value] of Object.entries(initialAddress)) {
+      if (key !== field && isValid) {
+        isValid = utils.checkValidity(initialAddress[key].value, initialAddress[key])
+      }
+      if (!isValid) {
+        break;
+      }
+    }
+
     const inputData = {
       ...initialAddress,
       [field]: {
         ...initialAddress[field],
-        isError: !isValid,
+        isError: !isValidField,
         value: event.target.value
       }
     }
     initialAddress = inputData;
-
     props.onChangeIsNext(isValid)
     props.onChangeAddressForm(inputData)
   }
@@ -144,15 +155,15 @@ const addressForm = (props) => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            error={initialAddress.address2.isError === true}
-            required={initialAddress.address2.required}
-            id="address2"
-            name="address2"
-            label={initialAddress.address2.label}
+            error={initialAddress.district.isError === true}
+            required={initialAddress.district.required}
+            id="district"
+            name="district"
+            label={initialAddress.district.label}
             fullWidth
-            autoComplete="shipping address-line2"
-            value={initialAddress.address2.value}
-            onChange={(event) => onChangeInput(event, 'address2')}
+            autoComplete="shipping district"
+            value={initialAddress.district.value}
+            onChange={(event) => onChangeInput(event, 'district')}
           />
         </Grid>
         <Grid item xs={12} sm={6}>

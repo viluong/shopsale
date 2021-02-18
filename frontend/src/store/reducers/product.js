@@ -1,9 +1,9 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  products: null,
+  products: [],
   error: null,
-  totalCount: null,
+  totalCount: 0,
 };
 
 const reducer = (state = initialState, action) => {

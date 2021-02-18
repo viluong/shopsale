@@ -1,7 +1,7 @@
 import React from 'react';
 
-import useHttpErrorHandler from '../../hooks/http-error-handler';
-import Modal from '../../components/UI/Modal/Modal';
+import useHttpErrorHandler from 'hooks/http-error-handler';
+import Modal from 'components/UI/Modal/Modal';
 import Aux from 'hocs/HightAux/HightAux';
 
 
