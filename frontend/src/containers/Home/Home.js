@@ -22,7 +22,7 @@ const home = () => {
   }, [onInitProducts])
 
   let productsRender = <ProductSkeletons />
-  if (products.length > 0) {
+  if (products && products.length > 0) {
       productsRender = <ProductCards products={products} />
   }
 

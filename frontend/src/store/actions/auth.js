@@ -34,10 +34,9 @@ export const userRegisterSuccess = (data) => {
   }
 } 
 
-export const userRegisterFailed = (error) => {
+export const userRegisterFailed = () => {
   return {
     type: actionTypes.REGISTER_USER_FAILED,
-    error: error
   }
 }
 
@@ -55,10 +54,9 @@ export const authSuccess = (token, refresh_token) => {
   }
 }
 
-export const authFailed = (error) => {
+export const authFailed = () => {
   return {
     type: actionTypes.AUTH_FAILED,
-    error: error
   }
 }
 
@@ -88,7 +86,7 @@ export const registerUser = (values) => {
       dispatch(userRegisterSuccess(res.data))
       dispatch(openSignInModal())
     }).catch(error => {
-      dispatch(userRegisterFailed(error))
+      dispatch(userRegisterFailed())
     })
   }
 }
@@ -113,7 +111,29 @@ export const loginUser = (values) => {
       dispatch(authSuccess(res.data.access, res.data.refresh));
       dispatch(getUserProfile(res.data.user));
     }).catch(error => {
-      dispatch(authFailed(error));
+      dispatch(authFailed());
+    })
+  }
+}
+
+export const loginWithGoogle = (access_token) => {
+  const data = {
+    token: access_token
+  }
+  return (dispatch) => {
+    axios.post('/auth/google', data).then( res => {
+      cookie.save('token', res.data.access, {
+        path: '/',
+        maxAge: res.data.expires_in
+      })
+      cookie.save('refresh_token', res.data.refresh, {
+        path: '/',
+        maxAge: res.data.expires_in
+      })
+      dispatch(authSuccess(res.data.access, res.data.refresh));
+      dispatch(getUserProfile(res.data.user));
+    }).catch(error => {
+      dispatch(authFailed());
     })
   }
 }
@@ -136,7 +156,13 @@ export const initUserProfile = () => {
       axios.get('/auth/profile').then(res => {
         dispatch(getUserProfile(res.data))
       }).catch(error => {
-        console.log(error)
+        cookie.remove('token', {
+          path: '/'
+        })
+        cookie.remove('refresh_token', {
+          path: '/'
+        })
+        dispatch(authFailed())
       })
     }
   }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default httpClient => {
+const httpHandler = (httpClient) => {
     const [error, setError] = useState(null);
 
     const reqInterceptor = httpClient.interceptors.request.use(req => {
@@ -8,9 +8,11 @@ export default httpClient => {
       return req;
     });
     const resInterceptor = httpClient.interceptors.response.use(
-      res => res,
+      res => {
+        return res
+      },
       err => {
-        setError(err);
+        setError(err.response.data);
       }
     );
 
@@ -27,3 +29,5 @@ export default httpClient => {
 
     return [error, errorConfirmedHandler];
 }
+
+export default httpHandler;

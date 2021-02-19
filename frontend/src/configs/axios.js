@@ -1,14 +1,12 @@
 import axios from 'axios';
-import { store } from '../store/index';
-
+import cookie from 'react-cookies'
 
 const instance = axios.create({
     baseURL: 'http://localhost:8001/api'
 });
 
 instance.interceptors.request.use(function (config) {
-    const token = store.getState().auth.token;
-
+    const token = cookie.load('token');
     if (token) {
         config.headers.Authorization =  'Bearer ' + token;
     }

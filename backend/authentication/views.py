@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.utils import json
@@ -29,13 +30,16 @@ class GoogleView(APIView):
 
         # create user if not exist
         try:
-            user = User.objects.get(email=data['email'])
+            user = User.objects.get(email=data.get('email'))
         except User.DoesNotExist:
             user = User()
-            user.username = data['email']
+            user.username = data.get('email')
             # provider random default password
             user.password = make_password(CustomUserManager().make_random_password())
-            user.email = data['email']
+            user.email = data.get('email')
+            user.first_name = data.get('given_name')
+            user.last_name = data.get('family_name')
+            user.is_google = True
             user.save()
 
         token = RefreshToken.for_user(user)  # generate token without username & password
@@ -44,6 +48,7 @@ class GoogleView(APIView):
         response['user'] = user_serializer.data
         response['access'] = str(token.access_token)
         response['refresh'] = str(token)
+        response['expires_in'] = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()
         return Response(response)
 
 

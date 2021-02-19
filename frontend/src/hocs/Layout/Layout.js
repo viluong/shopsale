@@ -4,9 +4,9 @@ import { withStyles } from '@material-ui/styles';
 
 import Aux from 'hocs/HightAux/HightAux';
 
-import Header from '../../components/Shop/Header/Header';
-import Footer from '../../components/Shop/Footer/Foorter';
-import * as action from '../../store/actions/index';
+import Header from 'components/Shop/Header/Header';
+import Footer from 'components/Shop/Footer/Foorter';
+import * as action from 'store/actions/index';
 import withErrorHandler from 'hocs/withErrorHandler/withErrorHandler';
 import axios from 'configs/axios';
 
@@ -14,13 +14,9 @@ const layout = (props) => {
   const { classes } = props;
   const dispatch = useDispatch()
 
-  const onInitUserProfile = () => {
+  const onAutoSignIn = useCallback(() => {
     dispatch(action.initUserProfile())
-  }
-
-  const onAutoSignIn = () => {
-    dispatch(action.checkAuth())
-  }
+  })
 
   const onInitCart = useCallback(() => {
     dispatch(action.initCarts())
@@ -29,10 +25,6 @@ const layout = (props) => {
   useEffect(() => {
     onAutoSignIn()
   }, [onAutoSignIn])
-
-  useEffect(() => {
-    onInitUserProfile()
-  }, [onInitUserProfile])
 
   useEffect(() => {
     onInitCart()

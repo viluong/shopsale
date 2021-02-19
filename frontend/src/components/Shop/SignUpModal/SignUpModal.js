@@ -150,7 +150,7 @@ const signUpModal = () => {
 
   return (
     <div>
-      <Typography onClick={handleOpen}>
+      <Typography onClick={handleOpen} style={{cursor: 'pointer'}}>
         SignUp
       </Typography>
       <Modal

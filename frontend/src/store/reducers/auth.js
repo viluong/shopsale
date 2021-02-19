@@ -4,7 +4,6 @@ const initialState = {
   openSignUp: false,
   openSignIn: false,
   user: null,
-  error: null,
   loading: false,
   token: null,
   refresh_token: null
@@ -39,8 +38,7 @@ const reducer = (state = initialState, action) => {
       }
     case actionTypes.REGISTER_USER_FAILED:
       return {
-        ...state,
-        error: action.error
+        ...state
       }
     case actionTypes.AUTH_START:
       return {
@@ -57,8 +55,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.AUTH_FAILED:
       return {
         ...state,
-        loading: false,
-        error: action.error
+        loading: false
       }
     case actionTypes.GET_USER_PROFILE:
       return {

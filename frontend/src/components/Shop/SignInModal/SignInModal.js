@@ -25,7 +25,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     backgroundColor: "white",
     padding: '30px 30px',
-    borderRadius: 10
+    borderRadius: 10,
+    zIndex: 999
   },
   avatar: {
     margin: theme.spacing(1),
@@ -45,10 +46,11 @@ const useStyles = makeStyles((theme) => ({
 
 const signInModal = () => {
   const classes = useStyles();
-  const { handleSubmit, register } = useForm();
-
   const dispatch = useDispatch()
+
+  const { handleSubmit, register } = useForm();
   const { open, loading } = useSelector(authSelector); 
+  
   const handleOpen = () => {
     dispatch(action.openSignInModal());
   };
@@ -66,76 +68,74 @@ const signInModal = () => {
     dispatch(action.loginUser(data));
   };
 
-  let body = <Spinner />
   
-  if (!loading) {
-    body = (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form className={classes.form} noValidate onSubmit={handleSubmit(onSignIn)}>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              inputRef={register}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              inputRef={register}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign In
-            </Button>
-            <div className={classes.socialLogin}>
-              <LoginGoogle />
-            </div>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2" onClick={openSignUp}>
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
+  const body = (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        <form className={classes.form} noValidate onSubmit={handleSubmit(onSignIn)}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            inputRef={register}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            inputRef={register}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Sign In
+          </Button>
+          <div className={classes.socialLogin}>
+            <LoginGoogle />
+          </div>
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
             </Grid>
-          </form>
-        </div>
-      </Container>
-    );
-  }
+            <Grid item>
+              <Link href="#" variant="body2" onClick={openSignUp}>
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+    </Container>
+  );
+
   return (
     <div>
-      <Typography onClick={handleOpen}>
+      <Typography onClick={handleOpen} style={{cursor: 'pointer'}}>
         SignIn
       </Typography>
       <Modal

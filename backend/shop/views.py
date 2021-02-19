@@ -8,6 +8,7 @@ from shop.utils import get_products_from_redis
 
 
 class ProductList(generics.ListAPIView):
+    authentication_classes = []
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
@@ -20,6 +21,7 @@ class ProductList(generics.ListAPIView):
 
 
 class ProductDetail(generics.RetrieveAPIView):
+    authentication_classes = []
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
@@ -28,6 +30,9 @@ class OrderView(generics.CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class OrderDetail(generics.RetrieveAPIView):
     queryset = Order.objects.all()
@@ -35,6 +40,7 @@ class OrderDetail(generics.RetrieveAPIView):
 
 
 class CategoryList(generics.ListAPIView):
+    authentication_classes = []
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
@@ -44,7 +50,8 @@ class OrderLineView(generics.CreateAPIView):
     serializer_class = OrderLineSerializer
 
 
-class   CartView(APIView):
+class CartView(APIView):
+    authentication_classes = []
 
     def post(self, request):
         products = get_products_from_redis(request.data['product_ids'])

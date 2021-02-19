@@ -8,10 +8,9 @@ const fetchProduct = (products) => {
   }
 }
 
-const fetchProductFailed = (error) => {
+const fetchProductFailed = () => {
   return {
     type: actionTypes.FETCH_PRODUCTS_FAILED,
-    error: error
   }
 }
 
@@ -23,10 +22,9 @@ const getProduct = (product) => {
 
 }
 
-const getProductFailed = (error) => {
+const getProductFailed = () => {
   return {
     type: actionTypes.GET_PRODUCT_FAILED,
-    error: error
   }
 }
 
@@ -35,7 +33,7 @@ export const initProducts = () => {
     axios.get('/products/').then( res => {
       dispatch(fetchProduct(res.data));
     }).catch( error => {
-      dispatch(fetchProductFailed(error))
+      dispatch(fetchProductFailed())
     })
   }
 }
@@ -45,7 +43,7 @@ export const getProductDetail = (id) => {
     axios.get(`/products/${id}/`).then( res => {
       dispatch(getProduct(res.data))
     }).catch( error => {
-      dispatch(getProductFailed(error))
+      dispatch(getProductFailed())
     })
   }
 }

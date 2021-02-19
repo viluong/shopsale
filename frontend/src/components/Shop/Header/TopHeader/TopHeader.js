@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import SignInModal from 'components/Shop/SignInModal/SignInModal';
 import SignUpModal from 'components/Shop/SignUpModal/SignUpModal';
 import { Typography } from '@material-ui/core';
-import * as action from '../../../../store/actions/index';
+import * as action from 'store/actions/index';
 
 const topHeader = (props) => {
   const { user } = props;
@@ -21,9 +21,14 @@ const topHeader = (props) => {
   };
 
   const handleClose = () => {
-    dispatch(action.onLogOut())
     setAnchorEl(null);
   };
+
+  const handleLogout = () => {
+    dispatch(action.onLogOut());
+    setAnchorEl(null);
+  }
+
   let headerDisplay = (   
     <div className={classes.topHeader}>
       <SignInModal />
@@ -47,7 +52,7 @@ const topHeader = (props) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </div>
     )

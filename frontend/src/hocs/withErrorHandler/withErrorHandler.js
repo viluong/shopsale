@@ -8,14 +8,14 @@ import Aux from 'hocs/HightAux/HightAux';
 const withErrorHandler = ( WrappedComponent, axios ) => {
     return props => {
         const [error, clearError] = useHttpErrorHandler(axios);
-
-        return (
-            <Aux>
-                <Modal
+        const modal = error && error.detail ? <Modal
                     show={error}
                     modalClosed={clearError}>
-                    {error ? error.message : null}
-                </Modal>
+                    {error.detail}
+                </Modal> : ''; 
+        return (
+            <Aux>
+                {modal}
                 <WrappedComponent {...props} />
             </Aux>
         );

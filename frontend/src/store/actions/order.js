@@ -29,10 +29,9 @@ export const saveOrderSuccess = (order) => {
   }
 }
 
-export const saveOrderFailed = (error) => {
+export const saveOrderFailed = () => {
   return {
     type: actionTypes.SAVE_ORDER_FAILED,
-    error: error
   }
 }
 
@@ -84,10 +83,8 @@ export const saveOrder = (order) => {
     console.log("order 1w121", order)
     dispatch(saveOrderRequest())
     axios.post('/orders/', order).then((res) => { 
-      console.log("save", res.data.name)
       dispatch(saveOrderSuccess(res.data))
-      console.log("12121")
       dispatch(clearProductsCart())
-    }).catch(error => dispatch(saveOrderFailed(error)))
+    }).catch(error => dispatch(saveOrderFailed()))
   }
 }

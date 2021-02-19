@@ -8,10 +8,9 @@ export const loadCartSuccess = (carts) => {
   }
 }
 
-export const loadCartFailed = (error) => {
+export const loadCartFailed = () => {
   return {
     type: actionTypes.LOAD_CARTS_FAILED,
-    error: error
   }
 }
 
@@ -50,7 +49,7 @@ export const addProductToCart = (productId, quantity) => {
 export const initCarts = () => {
   return (dispatch) => {
     const carts = JSON.parse(localStorage.getItem('carts'))
-    if (carts) {
+    if (carts && carts.length > 0) {
       const productIds = carts.map(cart => {
         return cart.productId
       })
@@ -65,7 +64,7 @@ export const initCarts = () => {
         })
         dispatch(loadCartSuccess(data_cart))
       }).catch(error => {
-        dispatch(loadCartFailed(error))
+        dispatch(loadCartFailed())
       })
     }
   }

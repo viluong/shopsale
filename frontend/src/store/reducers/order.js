@@ -3,7 +3,6 @@ import * as actionTypes from '../actions/actionTypes';
 const initialState = {
   address: null,
   loading: false,
-  error: null,
   orderId: null
 }
 
@@ -33,8 +32,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SAVE_ORDER_FAILED:
       return {
         ...state,
-        loading: false,
-        error: action.error
+        loading: false
       }
     default: return state
   }

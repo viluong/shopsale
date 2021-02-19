@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'authentication.apps.AuthenticationConfig',
-    'shop.apps.ShopConfig'
+    'shop.apps.ShopConfig',
+    'exception.apps.ExceptionConfig'
 ]
 
 MIDDLEWARE = [
@@ -75,7 +76,11 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'EXCEPTION_HANDLER': 'exception.utils.custom_exception_handler'
 }
 
 SIMPLE_JWT = {
