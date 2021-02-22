@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from '@material-ui/core/Modal';
 import Avatar from '@material-ui/core/Avatar';
@@ -40,6 +40,40 @@ const useStyles = makeStyles((theme) => ({
 
 
 const signUpModal = () => {
+  const [initialSignUp, setInitialSignUp] = useState({
+    firstName: {
+      value: '',
+      required: true,
+      label: 'First name',
+      isError: '',
+      type: 'text',
+      isAutoFocus: true
+    },
+    lastName: {
+      value: '',
+      required: true,
+      label: 'Last Name',
+      isError: '',
+      type: 'text',
+      isAutoFocus: false
+    },
+    email: {
+      value: '',
+      required: true,
+      label: 'Email',
+      isError: '',
+      type: 'email',
+      isAutoFocus: false
+    },
+    password: {
+      value: '',
+      required: true,
+      label: 'Password',
+      isError: '',
+      type: 'password',
+      isAutoFocus: false
+    }
+  })
   const classes = useStyles();
   const dispatch = useDispatch();
   const { handleSubmit, register } = useForm();

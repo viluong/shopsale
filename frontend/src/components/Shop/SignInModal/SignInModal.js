@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from '@material-ui/core/Modal';
 import Avatar from '@material-ui/core/Avatar';
@@ -14,8 +14,9 @@ import Container from '@material-ui/core/Container';
 import LoginGoogle from '../../Social/LoginGoogle/LoginGoogle';
 import * as action from '../../../store/actions/index';
 import { useForm } from "react-hook-form";
-import Spinner from 'components/UI/Spinner/Spinner';
 import { authSelector } from 'selectors/AuthSelector';
+import { element } from 'prop-types';
+import * as utils from 'utils/utils';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -44,7 +45,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 const signInModal = () => {
+  console.log(1221)
+  const [formIsValid, setFormIsValid] = useState(false)
+  const [initialSignIn, setInitialSignIn] = useState({
+    email: {
+      value: '',
+      required: true,
+      label: 'Email',
+      isError: '',
+      type: 'email',
+      isAutoFocus: true
+    },
+    password: {
+      value: '',
+      required: true,
+      label: 'Password',
+      isError: '',
+      type: 'password',
+      isAutoFocus: false
+    }
+  })
   const classes = useStyles();
   const dispatch = useDispatch()
 
@@ -68,7 +91,36 @@ const signInModal = () => {
     dispatch(action.loginUser(data));
   };
 
+  const onChangeInput = (event, field) => {
+    
+    event.preventDefault();
+    let isValid = false;
+    isValid = utils.checkValidity(event.target.value, initialSignIn[field])
+    const inputSignIn = {
+      ...initialSignIn,
+      [field]: {
+        ...initialSignIn[field],
+        isError: !isValid,
+        value: event.target.value
+      }
+    }
+    let isFormValid = true
+    for (let key in inputSignIn) {
+      isFormValid = !inputSignIn[key].isError && isFormValid
+    }
+    setInitialSignIn(inputSignIn)
+    setFormIsValid(isFormValid)
+  }
+
+  const formElementsArray = []
   
+  for (let key in initialSignIn) {
+    formElementsArray.push({
+        id: key,
+        config: initialSignIn[key]
+    });
+  }
+
   const body = (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -80,7 +132,27 @@ const signInModal = () => {
           Sign in
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit(onSignIn)}>
-          <TextField
+          { 
+            formElementsArray.map( element => (
+              <TextField
+                key={element.id}
+                error={element.config.isError === true}
+                variant="outlined"
+                margin="normal"
+                required={element.config.required}
+                fullWidth
+                id={element.id}
+                label={element.config.label}
+                name={element.id}
+                autoComplete={element.id}
+                autoFocus={element.config.isAutoFocus}
+                inputRef={register}
+                value={element.config.value}
+                onChange={(event) => onChangeInput(event, element.id)}
+                />
+            ))
+          }
+          {/* <TextField
             variant="outlined"
             margin="normal"
             required
@@ -103,13 +175,14 @@ const signInModal = () => {
             id="password"
             autoComplete="current-password"
             inputRef={register}
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={!formIsValid}
           >
             Sign In
           </Button>
