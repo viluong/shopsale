@@ -15,7 +15,6 @@ import LoginGoogle from '../../Social/LoginGoogle/LoginGoogle';
 import * as action from '../../../store/actions/index';
 import { useForm } from "react-hook-form";
 import { authSelector } from 'selectors/AuthSelector';
-import { element } from 'prop-types';
 import * as utils from 'utils/utils';
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 const signInModal = () => {
-  console.log(1221)
   const [formIsValid, setFormIsValid] = useState(false)
   const [initialSignIn, setInitialSignIn] = useState({
     email: {
@@ -106,7 +104,7 @@ const signInModal = () => {
     }
     let isFormValid = true
     for (let key in inputSignIn) {
-      isFormValid = !inputSignIn[key].isError && isFormValid
+      isFormValid = inputSignIn[key].isError === false && isFormValid
     }
     setInitialSignIn(inputSignIn)
     setFormIsValid(isFormValid)
@@ -141,6 +139,7 @@ const signInModal = () => {
                 margin="normal"
                 required={element.config.required}
                 fullWidth
+                type={element.config.type}
                 id={element.id}
                 label={element.config.label}
                 name={element.id}
@@ -152,30 +151,6 @@ const signInModal = () => {
                 />
             ))
           }
-          {/* <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            inputRef={register}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            inputRef={register}
-          /> */}
           <Button
             type="submit"
             fullWidth

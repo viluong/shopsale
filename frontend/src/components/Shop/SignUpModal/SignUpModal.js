@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useForm } from "react-hook-form";
+import * as utils from 'utils/utils';
 
 import * as action from '../../../store/actions/index';
 
@@ -40,6 +41,9 @@ const useStyles = makeStyles((theme) => ({
 
 
 const signUpModal = () => {
+  const { handleSubmit, register } = useForm();
+
+  const [formIsValid, setFormIsValid] = useState(false)
   const [initialSignUp, setInitialSignUp] = useState({
     firstName: {
       value: '',
@@ -47,7 +51,11 @@ const signUpModal = () => {
       label: 'First name',
       isError: '',
       type: 'text',
-      isAutoFocus: true
+      isAutoFocus: true,
+      gridStyle: {
+        xs: 12,
+        sm: 6
+      }
     },
     lastName: {
       value: '',
@@ -55,7 +63,11 @@ const signUpModal = () => {
       label: 'Last Name',
       isError: '',
       type: 'text',
-      isAutoFocus: false
+      isAutoFocus: false,
+      gridStyle: {
+        xs: 12,
+        sm: 6
+      }
     },
     email: {
       value: '',
@@ -63,7 +75,11 @@ const signUpModal = () => {
       label: 'Email',
       isError: '',
       type: 'email',
-      isAutoFocus: false
+      isAutoFocus: false,
+      gridStyle: {
+        xs: 12,
+        sm: false
+      }
     },
     password: {
       value: '',
@@ -71,12 +87,15 @@ const signUpModal = () => {
       label: 'Password',
       isError: '',
       type: 'password',
-      isAutoFocus: false
+      isAutoFocus: false,
+      gridStyle: {
+        xs: 12,
+        sm: false
+      }
     }
   })
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { handleSubmit, register } = useForm();
 
   const open = useSelector(state => state.auth.openSignUp)
 
@@ -89,13 +108,44 @@ const signUpModal = () => {
   };
 
   const openSignIn = () => {
-    handleClose();
+    dispatch(action.closeSignUpModal());
     dispatch(action.openSignInModal());
   }
 
   const onSubmit = (data) => {
     dispatch(action.registerUser(data));
   }
+  
+  const onChangeInput = (event, field) => {
+    
+    event.preventDefault();
+    let isValid = false;
+    isValid = utils.checkValidity(event.target.value, initialSignUp[field])
+    const inputSignUp = {
+      ...initialSignUp,
+      [field]: {
+        ...initialSignUp[field],
+        isError: !isValid,
+        value: event.target.value
+      }
+    }
+    let isFormValid = true
+    for (let key in inputSignUp) {
+      isFormValid = inputSignUp[key].isError === false && isFormValid
+    }
+    setInitialSignUp(inputSignUp)
+    setFormIsValid(isFormValid)
+  }
+
+  const formElementsArray = []
+  
+  for (let key in initialSignUp) {
+    formElementsArray.push({
+        id: key,
+        config: initialSignUp[key]
+    });
+  }
+
 
   const body = (
     <Container component="main" maxWidth="xs">
@@ -109,63 +159,37 @@ const signUpModal = () => {
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-                inputRef={register}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-                inputRef={register}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                type="email"
-                inputRef={register}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                inputRef={register}
-              />
-            </Grid>
+            {
+              formElementsArray.map( element => (
+                <Grid {...element.config.gridStyle} key={element.id} item>
+                  <TextField
+                    key={element.id}
+                    error={element.config.isError === true}
+                    variant="outlined"
+                    margin="normal"
+                    required={element.config.required}
+                    fullWidth
+                    type={element.config.type}
+                    id={element.id}
+                    label={element.config.label}
+                    name={element.id}
+                    autoComplete={element.id}
+                    autoFocus={element.config.isAutoFocus}
+                    inputRef={register}
+                    value={element.config.value}
+                    autoComplete={element.id}
+                    onChange={(event) => onChangeInput(event, element.id)}
+                    />
+                </Grid>
+              ))
+            }
           </Grid>
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
+            disabled={!formIsValid}
             className={classes.submit}
           >
             Sign Up
