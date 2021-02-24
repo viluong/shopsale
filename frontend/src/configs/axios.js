@@ -2,7 +2,7 @@ import axios from 'axios';
 import cookie from 'react-cookies'
 
 const instance = axios.create({
-    baseURL: 'http://localhost:8001/api'
+    baseURL: process.env.API_URL
 });
 
 instance.interceptors.request.use(function (config) {
