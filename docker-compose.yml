@@ -1,12 +1,16 @@
 version: "3.3"
-   
+
 services:
   db:
     image: postgres
     ports:
       - "0.0.0.0:5432:5432"
+    restart: always
     env_file:
       ./backend/.env
+    volumes:
+      - ./backend/initdb.sh:/docker-entrypoint-initdb.d/initdb.sh
+      - ./backend/.env:/backend/usr/app/.env
   backend:
     image: shopsale_backend
     env_file:
@@ -14,23 +18,23 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8001
+    command: ["/usr/app/backend/wait-for-it.sh", "db:5432", "-t", "5", "--", "python", "manage.py", "runserver", "0.0.0.0:8001"]
     volumes:
       - ./backend:/usr/app/backend
     ports:
       - "8001:8001"
     depends_on:
       - db
-      - migration
   migration:
     image: shopsale_backend
     env_file:
       ./backend/.env
-    command: python manage.py migrate
+    command: ["/usr/app/backend/wait-for-it.sh", "db:5432", "-t", "5", "--", "python", "manage.py", "migrate"]
     volumes:
       - ./backend:/usr/app/backend
     depends_on:
       - db
+      - backend
   redis:
     image: redis
     ports:

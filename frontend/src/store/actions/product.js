@@ -28,9 +28,9 @@ const getProductFailed = () => {
   }
 }
 
-export const initProducts = () => {
+export const initProducts = (page=1) => {
   return (dispatch) => {
-    axios.get('/products/').then( res => {
+    axios.get(`/products/?page=${page}`).then( res => {
       dispatch(fetchProduct(res.data));
     }).catch( error => {
       dispatch(fetchProductFailed())
