@@ -11,6 +11,7 @@ services:
     volumes:
       - ./backend/initdb.sh:/docker-entrypoint-initdb.d/initdb.sh
       - ./backend/.env:/backend/usr/app/.env
+      - ./backend/dump.sql:/backend/usr/app/dump.sql
   backend:
     image: shopsale_backend
     env_file:
@@ -39,6 +40,15 @@ services:
     image: redis
     ports:
       - "6379:6379"
+  worker:
+    image: shopsale_backend
+    command:  bash -c "rm -f -- -celerybeat && celery -A shopapp worker -l INFO"
+    env_file:
+      ./backend/.env
+    volumes:
+      - ./backend:/usr/app/backend
+    depends_on:
+      - backend
   frontend:
     env_file:
       ./frontend/.env

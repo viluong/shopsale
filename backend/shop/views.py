@@ -1,10 +1,12 @@
+import json
+
 from rest_framework import generics, mixins, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from shop.models import Product, Order, Category, OrderLine
 from shop.serializers import ProductSerializer, OrderSerializer, CategorySerializer, OrderLineSerializer
-from shop.utils import get_products_from_redis
+from shop.utils import get_products
 
 
 class ProductList(generics.ListAPIView):
@@ -54,5 +56,6 @@ class CartView(APIView):
     authentication_classes = []
 
     def post(self, request):
-        products = get_products_from_redis(request.data['product_ids'])
+        print("request.data['product_ids']", request.data['product_ids'])
+        products = get_products(request.data['product_ids'])
         return Response(products, status=status.HTTP_201_CREATED)

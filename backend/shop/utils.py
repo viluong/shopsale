@@ -1,10 +1,8 @@
-from shopapp.settings import r
+from shop.models import Product
 
 
-def get_products_from_redis(product_ids):
-    pipeline = r.pipeline()
-    for product_id in product_ids:
-        pipeline.hgetall('product:{}'.format(product_id))
-
-    product = pipeline.execute()
-    return product
+def get_products(product_ids):
+    objects = Product.objects.filter(id__in=product_ids).values()
+    objects = dict([(str(obj['id']), obj) for obj in objects])
+    sorted_objects = [objects[str(id)] for id in product_ids]
+    return sorted_objects
