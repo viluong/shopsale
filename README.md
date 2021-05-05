@@ -1,4 +1,4 @@
-# Shopsale bet project
+# Shopsale project
 
 ## Basic Features:
 1. Shop CURD.
