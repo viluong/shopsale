@@ -1,0 +1,3 @@
+export { 
+  initProducts, 
+} from './product';
