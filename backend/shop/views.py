@@ -17,7 +17,7 @@ class ProductList(generics.ListAPIView):
     def get_serializer_context(self):
         context = super(ProductList, self).get_serializer_context()
         context.update({
-            'fields': ['id', 'name', 'price', 'quantity', 'image']
+            'fields': ['id', 'name', 'price', 'quantity', 'image', 'category']
         })
         return context
 
