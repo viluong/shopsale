@@ -25,7 +25,12 @@ class Products extends Component {
     const { classes } = this.props;
     return (
       <LayoutContent>
-        <ProductList xs={12} paperClasses={classes.paper} products={this.props.products}/>
+        <ProductList 
+          xs={12} 
+          paperClasses={classes.paper} 
+          products={this.props.products}
+          title={'Product List'}
+        />
       </LayoutContent>
     )
   }

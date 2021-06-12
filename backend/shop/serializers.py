@@ -23,7 +23,7 @@ class CategorySerializer(DynamicFieldsModelSerializer):
 
 
 class ProductSerializer(DynamicFieldsModelSerializer):
-
+    category = CategorySerializer(read_only=True)
     class Meta:
         model = Product
         fields = '__all__'

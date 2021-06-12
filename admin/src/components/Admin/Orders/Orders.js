@@ -12,8 +12,8 @@ import Title from '../../UI/Title/Title';
 import Aux from '../../../hocs/HightAux/HightAux';
 
 // Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
+function createData(id, user, date, shipName, shipCity, paymentMethod) {
+  return { id, user, date, shipName, shipCity, paymentMethod };
 }
 
 const rows = [
@@ -57,10 +57,10 @@ const Orders = () => {
           {rows.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
+              <TableCell>{row.user}</TableCell>
+              <TableCell>{row.shipName}</TableCell>
+              <TableCell>{row.shipCity}</TableCell>
               <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{row.amount}</TableCell>
             </TableRow>
           ))}
         </TableBody>

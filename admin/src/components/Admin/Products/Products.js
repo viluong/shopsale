@@ -12,17 +12,17 @@ import Title from '../../UI/Title/Title';
 import Aux from '../../../hocs/HightAux/HightAux';
 
 // Generate Order Data
-function createData(id, name, category, price, quantity, is_public) {
-  return { id, name, category, price, quantity, is_public};
+const createData = (id, name, category, image, price, quantity, is_public) => {
+  return { id, name, category, image, price, quantity, is_public};
 }
 
-const rows = [
-  createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-  createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-  createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-];
+// const rows = [
+//   createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
+//   createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
+//   createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
+//   createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
+//   createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
+// ];
 
 function preventDefault(event) {
   event.preventDefault();
@@ -33,16 +33,44 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   paging: {
+    marginTop: theme.spacing(3),
     display: 'flex',
     justifyContent: 'center',
+  },
+  image: {
+    width: 40,
+    height: 40
   }
 }));
 
-const Products = () => {
+const seeMore = (allowSeeMore, totalCount, classes) => {
+  if(allowSeeMore) {
+    return (
+      <div className={classes.seeMore}> 
+        <Link color="primary" href="#" onClick={preventDefault}>
+          See more orders
+        </Link>
+      </div>
+    )
+  } else {
+    return (      
+      <div className={classes.paging}>
+        <Pagination count={ 1 } size="small" />
+      </div>
+    )
+  }
+}
+
+const Products = (props) => {
+  const { products, allowSeeMore, title, totalCount } = props;
+  const rows = products.map( product => {
+    return createData(product.id, product.name, product.category.name, product.image, product.price, product.quantity, true)
+  })
+
   const classes = useStyles();
   return (
     <Aux>
-      <Title>Recent Products</Title>
+      <Title>{title}</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -56,26 +84,18 @@ const Products = () => {
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>
-                sadsad
+              <TableCell size="small" >
+                <img src={row.image} className={classes.image} alt={row.name}/>
               </TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.category}</TableCell>
               <TableCell>{row.price}</TableCell>
               <TableCell>{row.quantity}</TableCell>
-              <TableCell>{row.is_public}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          See more orders
-        </Link>
-      </div>
-      <div className={classes.paging}>
-        <Pagination count={10} size="small" />
-      </div>
+      {seeMore(allowSeeMore, totalCount, classes)}
     </Aux>
   );
 };
