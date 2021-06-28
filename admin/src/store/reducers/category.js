@@ -1,28 +1,22 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  products: [],
+  categories: [],
   totalCount: 0,
-  created: false
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.FETCH_PRODUCTS:
+    case actionTypes.FETCH_CATEGORIES:
       return {
         ...state,
-        products: action.products.results,
-        totalCount: action.products.count
+        categories: action.categories.results,
+        totalCount: action.categories.count
       };
-    case actionTypes.FETCH_PRODUCTS_FAILED:
+    case actionTypes.FETCH_CATEGORIES_FAILED:
       return {
         ...state,
       };
-    case actionTypes.CREATE_PRODUCT:
-      return {
-        ...state,
-        created: true
-      }
     default: return state;
   }
 }
