@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from shop.models import Category, Product, Order, OrderLine
+from authentication.serializers import UserSerializer
 
 
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
@@ -24,6 +25,8 @@ class CategorySerializer(DynamicFieldsModelSerializer):
 
 class ProductSerializer(DynamicFieldsModelSerializer):
     category = CategorySerializer(read_only=True)
+    category_id = serializers.UUIDField(write_only=True)
+
     class Meta:
         model = Product
         fields = '__all__'
@@ -42,6 +45,7 @@ class OrderLineSerializer(DynamicFieldsModelSerializer):
 class OrderSerializer(DynamicFieldsModelSerializer):
 
     order_lines = OrderLineSerializer(many=True)
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Order
@@ -49,7 +53,7 @@ class OrderSerializer(DynamicFieldsModelSerializer):
                   'ship_email', 'ship_phone', 'ship_address',
                   'ship_city', 'ship_district', 'payment_method',
                   'delivery_fee', 'sub_total', 'total',
-                  'name']
+                  'user', 'created_at', 'updated_at']
         read_only_fields = ['sub_total', 'total', 'name']
 
     def create(self, validated_data):

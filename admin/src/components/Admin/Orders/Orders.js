@@ -10,19 +10,14 @@ import Pagination from '@material-ui/lab/Pagination';
 
 import Title from '../../UI/Title/Title';
 import Aux from '../../../hocs/HightAux/HightAux';
+import { formatDateTime } from '../../../utils/utils';
+import Moment from 'react-moment';
 
 // Generate Order Data
 function createData(id, user, date, shipName, shipCity, paymentMethod) {
   return { id, user, date, shipName, shipCity, paymentMethod };
 }
 
-const rows = [
-  createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-  createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-  createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-];
 
 function preventDefault(event) {
   event.preventDefault();
@@ -38,8 +33,35 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Orders = () => {
+const seeMore = (allowSeeMore, totalCount, classes) => {
+  if(allowSeeMore) {
+    return (
+      <div className={classes.seeMore}> 
+        <Link color="primary" href="#" onClick={preventDefault}>
+          See more orders
+        </Link>
+      </div>
+    )
+  } else {
+    return (      
+      <div className={classes.paging}>
+        <Pagination count={ totalCount ? totalCount / 6 : 1 } size="small" />
+      </div>
+    )
+  }
+}
+
+const Orders = (props) => {
   const classes = useStyles();
+  const { orders, allowSeeMore } = props;
+  const rows = orders.slice(0, 5).map((order) => {
+    const user = order.user ? order.user.first_name + " " + order.user.last_name : ''
+    const createdDate = (<Moment format="YYYY/MM/DD HH:mm:ss">
+        {formatDateTime(order.created_at).toString()}
+      </Moment>
+      )
+    return createData(order.id, user, createdDate, order.ship_name, order.ship_city, order.payment_method)
+  })
   return (
     <Aux>
       <Title>Recent Orders</Title>
@@ -50,29 +72,22 @@ const Orders = () => {
             <TableCell>Name</TableCell>
             <TableCell>Ship To</TableCell>
             <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell>City</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.date}</TableCell>
-              <TableCell>{row.user}</TableCell>
+              <TableCell>{row.user ? row.user : 'Anonymous'}</TableCell>
               <TableCell>{row.shipName}</TableCell>
-              <TableCell>{row.shipCity}</TableCell>
               <TableCell>{row.paymentMethod}</TableCell>
+              <TableCell>{row.shipCity}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          See more orders
-        </Link>
-      </div>
-      <div className={classes.paging}>
-        <Pagination count={10} size="small" />
-      </div>
+      {seeMore(allowSeeMore, 0, classes)}
     </Aux>
   );
 };

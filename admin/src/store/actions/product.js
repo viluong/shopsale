@@ -14,12 +14,38 @@ const fetchProductFailed = () => {
   }
 }
 
+const generateProduct = (product) => {
+  return {
+    type: actionTypes.CREATE_PRODUCT,
+    product: product
+  }
+}
+
+const generateProductFailed = () => {
+  return {
+    type: actionTypes.CREATE_PRODUCT_FAILED
+  }
+}
+
 export const initProducts = (page=1) => {
-  return (dispatch) => {
-    axios.get(`/products/?page=${page}`).then( res => {
+  return async dispatch => {
+    try {
+      let res = axios.get(`/products/?page=${page}`);
       dispatch(fetchProduct(res.data));
-    }).catch( error => {
+    } catch (err) {
       dispatch(fetchProductFailed())
-    })
+    }
+    
+  }
+}
+
+export const createProduct = (data) => {
+  return async dispatch => {
+    try {
+      let res = axios.post('/products/', data);
+      dispatch(generateProduct(res.data))
+    } catch (err) {
+      dispatch(generateProductFailed())
+    }
   }
 }

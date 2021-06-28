@@ -55,7 +55,7 @@ const seeMore = (allowSeeMore, totalCount, classes) => {
   } else {
     return (      
       <div className={classes.paging}>
-        <Pagination count={ 1 } size="small" />
+        <Pagination count={ totalCount ? totalCount / 6 : 1 } size="small" />
       </div>
     )
   }
