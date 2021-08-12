@@ -8,7 +8,12 @@ export const checkValidity = ( value, rules ) => {
       return true;
   }
   if ( rules.required ) {
+    try {
       isValid = value.trim() !== '' && isValid;
+    } catch( err) {
+      console.log(err)
+      isValid = value !== '' && isValid;
+    }
   }
   if ( rules.type) {
     if (rules.type === 'email') {

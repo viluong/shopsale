@@ -18,7 +18,7 @@ const useStyles = (theme) => ({
   }
 });
 
-class CreateProduct extends Component {
+class DetailProduct extends Component {
   state = {
     productForm: {
       name: {
@@ -37,7 +37,7 @@ class CreateProduct extends Component {
           required: true,
         },
         touched: false,
-        isValid: false,
+        isValid: true,
         renderComponent: (elements) => <TextField {...elements} />
       },
       image: {
@@ -56,7 +56,7 @@ class CreateProduct extends Component {
           required: true,
         },
         touched: false,
-        isValid: false,
+        isValid: true,
         renderComponent: (elements) => <TextField {...elements} />
       },
       description: {
@@ -95,7 +95,7 @@ class CreateProduct extends Component {
         validation: {
           required: true,
         },
-        isValid: false,
+        isValid: true,
         touched: false,
         renderComponent: (elements) => <TextField {...elements} />
       },
@@ -117,7 +117,7 @@ class CreateProduct extends Component {
           required: true,
         },
         touched: false,
-        isValid: false,
+        isValid: true,
         renderComponent: (elements) => <TextField {...elements} />
       },
       category: {
@@ -125,8 +125,8 @@ class CreateProduct extends Component {
           options: [],
           getOptionLabel: (option) => option.name,
           id: "auto-complete",
-          defaultValue: '',
           label: 'Category',
+          default: ''
         },
         styles: {
           xs: 12
@@ -135,48 +135,50 @@ class CreateProduct extends Component {
           required: true,
         },
         touched: false,
-        isValid: false,
+        isValid: true,
         renderComponent: (elements) => <Autocomplete {...elements} />
       }
     },
-    isValidForm: true,
-    product: {}
+    isFormValid: true,
+    isChangeInput: false
   }
   
   componentDidMount () {
-    this.props.onInitCategories()
+    const { id } = this.props.match.params
+    this.props.onInitCategories();
+    this.props.onGetProduct(id)
   }
 
   onChangeInput = (event, newValue, field) => {
     event.preventDefault();
-    const newInput = newValue ? newValue : event.target.value  
+    const newInput = newValue ? newValue : event.target.value;
     let isValid = false;
     isValid = checkValidity(newValue ? this.state.productForm[field].elements.getOptionLabel(newValue) : event.target.value, this.state.productForm[field].validation)
-    const inputElementChanged = updateObject(this.state.productForm[field], {
+    const newElementInput = {
       elements: {
         ...this.state.productForm[field].elements,
-        value: newInput,
+        value: newInput
       },
       isValid: isValid,
       touched: true
-    })
+    }
 
+    const inputElementChanged = updateObject(this.state.productForm[field], newElementInput)
     const productFormUpdated = updateObject(this.state.productForm, {
       [field]: inputElementChanged
     })
-
     let isFormValid = true;
     for (let inputIdentifier in productFormUpdated) {
       isFormValid = productFormUpdated[inputIdentifier].isValid && isFormValid;
     }
-
     this.setState({
       productForm: productFormUpdated,
-      isFormValid: isFormValid
+      isFormValid: isFormValid,
+      isChangeInput: true
     })
   }
 
-  creareProduct = () => {
+  editProduct = (id) => {
     const formData = {
       name: this.state.productForm['name'].elements.value,
       category_id: this.state.productForm['category'].elements.value.id,
@@ -184,40 +186,66 @@ class CreateProduct extends Component {
       price: this.state.productForm['price'].elements.value,
       quantity: this.state.productForm['quantity'].elements.value
     }
-    this.props.onCreateProduct(formData)
+    this.props.onEditProduct(id, formData)
     this.props.history.push("/products")
   }
-
+  
   render () {
     const { classes } = this.props;
     const productForm = this.state.productForm;
-    productForm.category.elements.options = this.props.categories;
-    return (
-      <LayoutContent>
-        <ProductForm 
-          xs={12} 
-          paperClasses={classes.paper} 
-          productForm={productForm} 
-          onChangeInput={this.onChangeInput} 
-          isValidForm={this.state.isFormValid}
-          onSubmitForm={this.creareProduct}
-          />
-      </LayoutContent>
-    )
+    let productRender = '';
+    if (this.props.product && !this.state.isChangeInput) {
+      for (let inputIdentifier in productForm) {
+        productForm[inputIdentifier].elements.value = this.props.product[inputIdentifier]
+        productForm[inputIdentifier].elements.default = this.props.product[inputIdentifier]
+
+      }
+      productForm.category.elements.options = this.props.categories;
+      productRender = (
+        <LayoutContent>
+          <ProductForm 
+            xs={12} 
+            paperClasses={classes.paper} 
+            productForm={productForm} 
+            onChangeInput={this.onChangeInput} 
+            isValidForm={this.state.isFormValid}
+            onSubmitForm={this.creareProduct}
+            />
+        </LayoutContent>
+      )
+    } 
+    if (this.state.isChangeInput) {
+      productRender = (
+        <LayoutContent>
+          <ProductForm 
+            xs={12} 
+            paperClasses={classes.paper} 
+            productForm={productForm} 
+            onChangeInput={this.onChangeInput} 
+            isValidForm={this.state.isFormValid}
+            onSubmitForm={this.creareProduct}
+            />
+        </LayoutContent>
+      )
+    }
+    return productRender
   }
 }
 
 const mapStateToProps = state => {
   return {
-    categories: state.category.categories
+    categories: state.category.categories,
+    product: state.product.product
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     onInitCategories: () => dispatch(actions.getCategories()),
-    onCreateProduct: (data) => dispatch(actions.createProduct(data))
+    onGetProduct: (id) => dispatch(actions.getProduct(id)),
+    onEditProduct: (data) => dispatch(actions.editProduct(data))
+
   }
 } 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(withRouter(CreateProduct)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(withRouter(DetailProduct)));

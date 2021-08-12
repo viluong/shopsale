@@ -54,14 +54,17 @@ const seeMore = (allowSeeMore, totalCount, classes) => {
 const Orders = (props) => {
   const classes = useStyles();
   const { orders, allowSeeMore } = props;
-  const rows = orders.slice(0, 5).map((order) => {
-    const user = order.user ? order.user.first_name + " " + order.user.last_name : ''
-    const createdDate = (<Moment format="YYYY/MM/DD HH:mm:ss">
-        {formatDateTime(order.created_at).toString()}
-      </Moment>
-      )
-    return createData(order.id, user, createdDate, order.ship_name, order.ship_city, order.payment_method)
-  })
+  let rows = []
+  if (orders) {
+    rows = orders.slice(0, 5).map((order) => {
+      const user = order.user ? order.user.first_name + " " + order.user.last_name : ''
+      const createdDate = (<Moment format="YYYY/MM/DD HH:mm:ss">
+          {formatDateTime(order.created_at).toString()}
+        </Moment>
+        )
+      return createData(order.id, user, createdDate, order.ship_name, order.ship_city, order.payment_method)
+    })
+  }
   return (
     <Aux>
       <Title>Recent Orders</Title>

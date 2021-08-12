@@ -1,6 +1,8 @@
 export { 
   initProducts,
-  createProduct
+  createProduct,
+  getProduct,
+  editProduct
 } from './product';
 
 export {

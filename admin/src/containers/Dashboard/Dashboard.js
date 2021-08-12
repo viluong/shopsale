@@ -27,7 +27,6 @@ class Dashboard extends Component {
 
   render () {
     const { classes, orders } = this.props;
-    console.log("orders", orders)
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
       <LayoutContent>
