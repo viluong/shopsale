@@ -7,9 +7,15 @@ import Aux from '../../../hocs/HightAux/HightAux';
 const ControllableStates = (props) => {
   const initElements = props
   const [inputValue, setInputValue] = React.useState('');
+  let optionProps = {}
+  if (initElements.default) {
+    optionProps['defaultValue'] = initElements.default;
+  }
   return (
     <Aux>
       <Autocomplete
+        {...optionProps}
+        getOptionSelected={(option, value) => option.id === value.id}
         onChange={initElements.onChange}
         getOptionLabel = {initElements.getOptionLabel}
         inputValue={inputValue}

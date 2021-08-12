@@ -24,7 +24,7 @@ const InputForm = (props) => {
   const renderForm = () => {
     const form = Object.keys(productForm).map((key, index) => {
       let item = productForm[key]
-      item.elements['onChange'] = (event, newValue) => onChangeInput(event, newValue, key)
+      item.elements['onChange'] = (event, newValue) => onChangeInput(event, newValue, key);
       item.elements.error = false
       if ( !item.isValid && item.validation && item.touched) {
         item.elements.error = true
@@ -37,7 +37,6 @@ const InputForm = (props) => {
     })
     return form;
   }
-
   return (
     <Aux>
         <Typography variant="h6" gutterBottom>

@@ -23,7 +23,7 @@ class ProductList(generics.ListCreateAPIView):
         return context
 
 
-class ProductDetail(generics.RetrieveAPIView):
+class ProductDetail(generics.RetrieveUpdateAPIView):
     authentication_classes = []
     queryset = Product.objects.all()
     serializer_class = ProductSerializer

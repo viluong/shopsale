@@ -83,15 +83,22 @@ const Products = (props) => {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell size="small" >
-                <img src={row.image} className={classes.image} alt={row.name}/>
-              </TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.category}</TableCell>
-              <TableCell>{row.price}</TableCell>
-              <TableCell>{row.quantity}</TableCell>
-            </TableRow>
+            
+              <TableRow key={row.id}>
+                <TableCell size="small" >
+                  <Link href={`/product/${row.id}`} >
+                    <img src={row.image} className={classes.image} alt={row.name}/>
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link href={`/product/${row.id}`} >
+                    {row.name}
+                  </Link>
+                </TableCell>
+                <TableCell>{row.category}</TableCell>
+                <TableCell>{row.price}</TableCell>
+                <TableCell>{row.quantity}</TableCell>
+              </TableRow>
           ))}
         </TableBody>
       </Table>

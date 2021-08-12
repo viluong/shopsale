@@ -2,6 +2,7 @@ import React from 'react';
 
 import withErrorHandler from '../withErrorHandler/withErrorHandler';
 import Sidebar from '../../components/Admin/Sidebar/Sidebar';
+
 import { Container, CssBaseline, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({

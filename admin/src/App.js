@@ -4,6 +4,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import Products from './containers/Products/Products';
 import theme from './configs/theme';
 import CreateProduct from './containers/CreareProduct/CreateProduct';
+import DetailProduct from './containers/DetailProduct/DetailProduct';
 import Dashboard from './containers/Dashboard/Dashboard';
 import Orders from './containers/Orders/Orders';
 import Layout from './hocs/Layout/Layout';
@@ -24,6 +25,9 @@ function App() {
           </Route>
           <Route path='/products/create' exact>
             <CreateProduct/>
+          </Route>
+          <Route path='/product/:id' exact>
+            <DetailProduct />
           </Route>
           <Route path='/products' exact>
             <Products/>
