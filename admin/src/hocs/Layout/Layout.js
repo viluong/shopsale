@@ -3,7 +3,9 @@ import React from 'react';
 import withErrorHandler from '../withErrorHandler/withErrorHandler';
 import Sidebar from '../../components/Admin/Sidebar/Sidebar';
 
-import { Container, CssBaseline, makeStyles } from '@material-ui/core';
+import { Container, CssBaseline } from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   root: {

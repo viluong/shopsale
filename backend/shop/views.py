@@ -3,6 +3,7 @@ import json
 from rest_framework import generics, mixins, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import filters
 
 from shop.models import Product, Order, Category, OrderLine
 from shop.serializers import ProductSerializer, OrderSerializer, CategorySerializer, OrderLineSerializer
@@ -13,6 +14,8 @@ class ProductList(generics.ListCreateAPIView):
     authentication_classes = []
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
     def get_serializer_context(self):
         context = super(ProductList, self).get_serializer_context()

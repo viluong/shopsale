@@ -18,17 +18,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const InputForm = (props) => {
-  const { productForm, onChangeInput, onSubmitForm, isValidForm } = props;
+const OrderForm = (props) => {
+  const { InputForm, onChangeInput, onSubmitForm, isValidForm } = props;
   const classes = useStyles();
   const renderForm = () => {
-    const form = Object.keys(productForm).map((key, index) => {
-      let item = productForm[key]
-      item.elements['onChange'] = (event, newValue) => onChangeInput(event, newValue, key);
+    const form = Object.keys(InputForm).map((key, index) => {
+      let item = InputForm[key]
+
+      if (item.disableDisplay) {
+        return '';
+      }
+      if (item.include_data) {
+        item.elements.value = item.include_data.map((field, index) => {
+          let elementForm = InputForm[field]
+          return (
+            <Grid key={index} item xs={elementForm.styles?.xs ? elementForm.styles.xs: false} md={elementForm.styles?.md ? elementForm.styles.md: false} lg={elementForm.styles?.lg ? elementForm.styles.lg: false}>
+              { elementForm.renderComponent({...elementForm.elements, ...elementForm.validation}) }
+            </Grid>
+          )  
+        })
+      }
+
+      item.elements['onChange'] = item.elements.onChange ? item.elements.onChange : (event, newValue) => onChangeInput(event, newValue, key);
       item.elements.error = false
+
       if ( !item.isValid && item.validation && item.touched) {
         item.elements.error = true
       }
+
       return (
         <Grid key={index} item xs={item.styles.xs ? item.styles.xs: false} md={item.styles.md ? item.styles.md: false} lg={item.styles.lg ? item.styles.lg: false}>
           { item.renderComponent({...item.elements, ...item.validation}) }
@@ -40,7 +57,7 @@ const InputForm = (props) => {
   return (
     <Aux>
         <Typography variant="h6" gutterBottom>
-          Product
+          Order Form
         </Typography>
         <Grid container spacing={3}>
           { renderForm() }
@@ -60,4 +77,4 @@ const InputForm = (props) => {
   )
 }
 
-export default InputForm;
+export default OrderForm;

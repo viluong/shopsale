@@ -3,6 +3,7 @@ import * as actionTypes from '../actions/actionTypes';
 const initialState = {
   orders: [],
   totalCount: 0,
+  order: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -17,6 +18,15 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
       };
+    case actionTypes.GET_ORDER:
+      return {
+        ...state,
+        order: action.order
+      }
+    case actionTypes.GET_ORDER_FAILED:
+      return {
+        ...state,
+      }
     default: return state;
   }
 }

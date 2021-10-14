@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@mui/styles';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
 import ProductForm from '../../components/Admin/Products/CreateProduct';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 import Autocomplete from '../../components/UI/Autocomplete/Autocomplete';
 import { withRouter } from "react-router-dom";
 import * as actions from '../../store/actions';
@@ -184,8 +184,10 @@ class CreateProduct extends Component {
       price: this.state.productForm['price'].elements.value,
       quantity: this.state.productForm['quantity'].elements.value
     }
-    this.props.onCreateProduct(formData)
-    this.props.history.push("/products")
+    const res = this.props.onCreateProduct(formData)
+    res.then((data) => {
+      this.props.history.push("/products")
+    })
   }
 
   render () {

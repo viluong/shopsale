@@ -1,12 +1,12 @@
 import React from 'react';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Pagination from '@material-ui/lab/Pagination';
+import Link from '@mui/material/Link';
+import makeStyles from '@mui/styles/makeStyles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Pagination from '@mui/material/Pagination';
 
 import Title from '../../UI/Title/Title';
 import Aux from '../../../hocs/HightAux/HightAux';
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const seeMore = (allowSeeMore, totalCount, classes) => {
+const FooterContent = (onChangePaging, allowSeeMore, totalCount, classes) => {
   if(allowSeeMore) {
     return (
       <div className={classes.seeMore}> 
@@ -55,14 +55,14 @@ const seeMore = (allowSeeMore, totalCount, classes) => {
   } else {
     return (      
       <div className={classes.paging}>
-        <Pagination count={ totalCount ? totalCount / 6 : 1 } size="small" />
+        <Pagination count={ totalCount ? Math.ceil(totalCount / 6) : 1 } size="small" onChange={onChangePaging} />
       </div>
     )
   }
 }
 
 const Products = (props) => {
-  const { products, allowSeeMore, title, totalCount } = props;
+  const { products, allowSeeMore, title, totalCount, onChangePaging } = props;
   const rows = products.map( product => {
     return createData(product.id, product.name, product.category.name, product.image, product.price, product.quantity, true)
   })
@@ -83,26 +83,21 @@ const Products = (props) => {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            
-              <TableRow key={row.id}>
-                <TableCell size="small" >
-                  <Link href={`/product/${row.id}`} >
-                    <img src={row.image} className={classes.image} alt={row.name}/>
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <Link href={`/product/${row.id}`} >
-                    {row.name}
-                  </Link>
-                </TableCell>
-                <TableCell>{row.category}</TableCell>
-                <TableCell>{row.price}</TableCell>
-                <TableCell>{row.quantity}</TableCell>
-              </TableRow>
+            <TableRow key={row.id} >
+              <TableCell size="small" href={`/product/${row.id}`} component="a">
+                  <img src={row.image} className={classes.image} alt={row.name}/>
+              </TableCell>
+              <TableCell href={`/product/${row.id}`} component="a">
+                  {row.name}
+              </TableCell>
+              <TableCell>{row.category}</TableCell>
+              <TableCell>{row.price}</TableCell>
+              <TableCell>{row.quantity}</TableCell>
+            </TableRow>
           ))}
         </TableBody>
       </Table>
-      {seeMore(allowSeeMore, totalCount, classes)}
+      {FooterContent(onChangePaging, allowSeeMore, totalCount, classes)}
     </Aux>
   );
 };
