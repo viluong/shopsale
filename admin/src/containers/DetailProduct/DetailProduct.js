@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@mui/styles';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
 import ProductForm from '../../components/Admin/Products/CreateProduct';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 import Autocomplete from '../../components/UI/Autocomplete/Autocomplete';
 import { withRouter } from "react-router-dom";
 import * as actions from '../../store/actions';
@@ -186,8 +186,11 @@ class DetailProduct extends Component {
       price: this.state.productForm['price'].elements.value,
       quantity: this.state.productForm['quantity'].elements.value
     }
-    this.props.onEditProduct(id, formData)
-    this.props.history.push("/products")
+    const res = this.props.onEditProduct(id, formData)
+    res.then((data) => {
+      this.props.history.push('/products')
+    })
+    
   }
   
   render () {
@@ -209,7 +212,7 @@ class DetailProduct extends Component {
             productForm={productForm} 
             onChangeInput={this.onChangeInput} 
             isValidForm={this.state.isFormValid}
-            onSubmitForm={this.creareProduct}
+            onSubmitForm={this.editProduct}
             />
         </LayoutContent>
       )
@@ -223,7 +226,7 @@ class DetailProduct extends Component {
             productForm={productForm} 
             onChangeInput={this.onChangeInput} 
             isValidForm={this.state.isFormValid}
-            onSubmitForm={this.creareProduct}
+            onSubmitForm={() => this.editProduct(this.props.product.id)}
             />
         </LayoutContent>
       )

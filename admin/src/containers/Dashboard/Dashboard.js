@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@mui/styles';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
 import Chart from '../../components/Admin/Chart/Chart';
 import Deposits from '../../components/Admin/Deposits/Deposits';
@@ -46,7 +46,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onInitOrders: () => dispatch(actions.initOrders())
+    onInitOrders: () => dispatch(actions.fetchOrders())
   }
 }
 

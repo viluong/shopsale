@@ -1,12 +1,12 @@
 import React from 'react';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Pagination from '@material-ui/lab/Pagination';
+import Link from '@mui/material/Link';
+import makeStyles from '@mui/styles/makeStyles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Pagination from '@mui/material/Pagination';
 
 import Title from '../../UI/Title/Title';
 import Aux from '../../../hocs/HightAux/HightAux';
@@ -33,11 +33,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const seeMore = (allowSeeMore, totalCount, classes) => {
+const FooterContent = (onChangePaging, allowSeeMore, totalCount, classes) => {
   if(allowSeeMore) {
     return (
       <div className={classes.seeMore}> 
-        <Link color="primary" href="#" onClick={preventDefault}>
+        <Link color="primary" href="/orders" onClick={preventDefault}>
           See more orders
         </Link>
       </div>
@@ -45,7 +45,7 @@ const seeMore = (allowSeeMore, totalCount, classes) => {
   } else {
     return (      
       <div className={classes.paging}>
-        <Pagination count={ totalCount ? totalCount / 6 : 1 } size="small" />
+        <Pagination count={ totalCount ? Math.ceil(totalCount / 6) : 1 } size="small" onChange={onChangePaging} />
       </div>
     )
   }
@@ -53,13 +53,13 @@ const seeMore = (allowSeeMore, totalCount, classes) => {
 
 const Orders = (props) => {
   const classes = useStyles();
-  const { orders, allowSeeMore } = props;
+  const { orders, allowSeeMore, totalCount, onChangePaging } = props;
   let rows = []
   if (orders) {
     rows = orders.slice(0, 5).map((order) => {
       const user = order.user ? order.user.first_name + " " + order.user.last_name : ''
       const createdDate = (<Moment format="YYYY/MM/DD HH:mm:ss">
-          {formatDateTime(order.created_at).toString()}
+          {formatDateTime(order.created_at).toISOString()}
         </Moment>
         )
       return createData(order.id, user, createdDate, order.ship_name, order.ship_city, order.payment_method)
@@ -81,8 +81,8 @@ const Orders = (props) => {
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.user ? row.user : 'Anonymous'}</TableCell>
+              <TableCell > <Link href={`/order/${row.id}`} >{row.date}</Link></TableCell>
+              <TableCell >{row.user ? row.user : 'Anonymous'}</TableCell>
               <TableCell>{row.shipName}</TableCell>
               <TableCell>{row.paymentMethod}</TableCell>
               <TableCell>{row.shipCity}</TableCell>
@@ -90,7 +90,7 @@ const Orders = (props) => {
           ))}
         </TableBody>
       </Table>
-      {seeMore(allowSeeMore, 0, classes)}
+      {FooterContent(onChangePaging, allowSeeMore, totalCount, classes)}
     </Aux>
   );
 };

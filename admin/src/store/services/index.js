@@ -1,0 +1,3 @@
+export {
+  searchProducts
+} from './products';

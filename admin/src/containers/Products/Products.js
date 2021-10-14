@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Component } from 'react';
-import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@mui/styles';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
 import ProductList from '../../components/Admin/Products/Products';
 import * as actions from '../../store/actions/index';
@@ -19,25 +19,30 @@ const useStyles = (theme) => ({
 
 class Products extends Component {
   state = {
-    created: true,
+    popup: true,
   }
   componentDidMount () {
     this.props.onInitProducts();
   }
   
   errorConfirmedHandler = () => {
-    this.setState( { created: null } );
+    this.setState( { popup: null } );
+  }
+  
+  onChangePaging = (event, page) => {
+    event.preventDefault();
+    this.props.onFetchProducts(page)
   }
 
   render () {
     const { classes } = this.props;
     let modal = ''
-    if (this.props.created) {
+    if (this.props.popup) {
       modal = (
         <Modal
-            show={this.state.created}
+            show={this.state.popup}
             modalClosed={this.errorConfirmedHandler}>
-            Created Successfully!!
+            {this.props.popupMess}
         </Modal>
       )
     }
@@ -50,6 +55,8 @@ class Products extends Component {
             xs={12} 
             paperClasses={classes.paper} 
             products={this.props.products}
+            totalCount={this.props.totalCount}
+            onChangePaging={this.onChangePaging}
             title={'Product List'}
           />
         </LayoutContent>
@@ -61,13 +68,16 @@ class Products extends Component {
 const mapStateToProps = state => {
   return {
     products: state.product.products,
-    created: state.product.created
+    totalCount: state.product.totalCount,
+    popup: state.product.popup,
+    popupMess: state.product.popupMessage
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onInitProducts: () => dispatch(actions.initProducts())
+    onInitProducts: () => dispatch(actions.initProducts()),
+    onFetchProducts: (page) => dispatch(actions.initProducts(page))
   }
 }
 

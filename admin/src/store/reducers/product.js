@@ -3,8 +3,8 @@ import * as actionTypes from '../actions/actionTypes';
 const initialState = {
   products: [],
   totalCount: 0,
-  created: false,
-  product: ''
+  popup: false,
+  popupMessage: ''
 };
 
 const reducer = (state = initialState, action) => {
@@ -22,7 +22,8 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CREATE_PRODUCT:
       return {
         ...state,
-        created: true
+        popup: true,
+        popupMessage: 'CREATE SUCCESSFUL!'
       }
     case actionTypes.GET_PRODUCT:
       return {
@@ -32,6 +33,23 @@ const reducer = (state = initialState, action) => {
     case actionTypes.GET_PRODUCT_FAILED:
       return {
         ...state
+      }
+    case actionTypes.EDIT_PRODUCT:
+      return {
+        ...state,
+        popup: true,
+        popupMessage: 'EDIT SUCCESSFUL!'
+
+      }
+    case actionTypes.SEARCH_PRODUCTS_SUCCESS:
+      return {
+        ...state,
+        products: action.products.results,
+        totalCount: action.products.count
+      }
+    case actionTypes.SEARCH_PRODUCTS_FAILED:
+      return {
+        ...state,
       }
     default: return state;
   }

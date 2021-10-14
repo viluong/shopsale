@@ -2,11 +2,13 @@ export {
   initProducts,
   createProduct,
   getProduct,
-  editProduct
+  editProduct,
+  searchProducts
 } from './product';
 
 export {
-  initOrders,
+  fetchOrders,
+  getOrder,
 } from './order';
 
 export {

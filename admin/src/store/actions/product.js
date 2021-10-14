@@ -1,5 +1,6 @@
 import axios from '../../configs/axios';
 import * as actionTypes from './actionTypes';
+import * as services from '../services'
 
 const fetchProduct = (products) => {
   return {
@@ -11,6 +12,19 @@ const fetchProduct = (products) => {
 const fetchProductFailed = () => {
   return {
     type: actionTypes.FETCH_PRODUCTS_FAILED,
+  }
+}
+
+const searchProductSuccess = (products) => {
+  return {
+    type: actionTypes.SEARCH_PRODUCTS_SUCCESS,
+    products: products
+  }
+}
+
+const searchProductFailed = () => {
+  return {
+    type: actionTypes.SEARCH_PRODUCTS_FAILED,
   }
 }
 
@@ -55,12 +69,27 @@ const editProductFail = () => {
 
 export const initProducts = (page=1) => {
   return async dispatch => {
+    let url = `/products/?page=${page}`;
     try {
-      let res = await axios.get(`/products/?page=${page}`)
+      let res = await axios.get(url)
       dispatch(fetchProduct(res.data));
     } catch (err) {
       dispatch(fetchProductFailed())
     } 
+  };
+}
+
+export const searchProducts = (search_text='') => {
+  return async dispatch => {
+    // let url = '/products/';
+    // const search = search_text ? search_text.replace(/[^a-zA-Z0-9]/g, "") : '';
+    // url = search ? url + `?search=${search}`: url;
+    try {
+      let res = await services.searchProducts(search_text)
+      dispatch(searchProductSuccess(res.data))
+    } catch (err) {
+      dispatch(searchProductFailed())
+    }
   }
 }
 
@@ -76,6 +105,7 @@ export const createProduct = (data) => {
 }
 
 export const editProduct = (id, data) => {
+  console.log("data", data)
   return async dispatch => {
     try {
       let res = await axios.put(`/products/${id}/`, data)
