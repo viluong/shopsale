@@ -10,14 +10,19 @@ import Pagination from '@mui/material/Pagination';
 
 import Title from '../../UI/Title/Title';
 import Aux from '../../../hocs/HightAux/HightAux';
-import { formatDateTime } from '../../../utils/utils';
-import Moment from 'react-moment';
 
 // Generate Order Data
-function createData(id, user, date, shipName, shipCity, paymentMethod) {
-  return { id, user, date, shipName, shipCity, paymentMethod };
+const createData = (id, name) => {
+  return { id, name};
 }
 
+// const rows = [
+//   createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
+//   createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
+//   createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
+//   createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
+//   createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
+// ];
 
 function preventDefault(event) {
   event.preventDefault();
@@ -28,8 +33,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   paging: {
+    marginTop: theme.spacing(3),
     display: 'flex',
     justifyContent: 'center',
+  },
+  image: {
+    width: 40,
+    height: 40
   }
 }));
 
@@ -37,7 +47,7 @@ const FooterContent = (onChangePaging, allowSeeMore, totalCount, classes) => {
   if(allowSeeMore) {
     return (
       <div className={classes.seeMore}> 
-        <Link color="primary" href="/orders" onClick={preventDefault}>
+        <Link color="primary" href="#" onClick={preventDefault}>
           See more orders
         </Link>
       </div>
@@ -51,41 +61,32 @@ const FooterContent = (onChangePaging, allowSeeMore, totalCount, classes) => {
   }
 }
 
-const Orders = (props) => {
+const Categories = (props) => {
+  const { categories, allowSeeMore, title, totalCount, onChangePaging } = props;
+  const rows = categories.map(category => {
+    return createData(category.id, category.name)
+  })
+
   const classes = useStyles();
-  const { orders, allowSeeMore, totalCount, onChangePaging } = props;
-  let rows = []
-  if (orders) {
-    rows = orders.slice(0, 5).map((order) => {
-      const user = order.user ? order.user.first_name + " " + order.user.last_name : ''
-      const createdDate = (<Moment format="YYYY/MM/DD HH:mm:ss">
-          {formatDateTime(order.created_at).toISOString()}
-        </Moment>
-        )
-      return createData(order.id, user, createdDate, order.ship_name, order.ship_city, order.payment_method)
-    })
-  }
   return (
     <Aux>
-      <Title>Recent Orders</Title>
+      <Title>{title}</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
+            <TableCell>Image</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell>City</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell > <Link href={`/order/${row.id}`} >{row.date}</Link></TableCell>
-              <TableCell >{row.user ? row.user : 'Anonymous'}</TableCell>
-              <TableCell>{row.shipName}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell>{row.shipCity}</TableCell>
+            <TableRow key={row.id} >
+              <TableCell size="small" href={`/category/${row.id}`} component="a">
+                  <img src={row.image} className={classes.image} alt={row.name}/>
+              </TableCell>
+              <TableCell href={`/category/${row.id}`} component="a">
+                  {row.name}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -95,4 +96,4 @@ const Orders = (props) => {
   );
 };
 
-export default Orders;
+export default Categories;

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Modal from '../../components/UI/Modal/Modal';
 import Aux from '../HightAux/HightAux';
 import axios from '../../configs/axios'
+import * as actions from '../../store/actions';
 
 const withErrorHandler = ( WrappedComponent ) => {
-    return class extends Component {
+    class ExtendComponent extends Component {
         state = {
             error: null
         }
@@ -26,22 +28,45 @@ const withErrorHandler = ( WrappedComponent ) => {
         }
 
         errorConfirmedHandler = () => {
-            this.setState( { error: null } );
+            if (this.props.popup) {
+                this.props.onClosePopup()
+            }
+            if (this.state.error) {
+                this.setState( { error: null } );
+            }
         }
 
         render () {
             return (
                 <Aux>
                     <Modal
-                        show={this.state.error}
+                        show={this.state.error || this.props.popup}
                         modalClosed={this.errorConfirmedHandler}>
                         {this.state.error ? this.state.error.message : null}
+                        {this.props.popup ? this.props.message : null}
                     </Modal>
                     <WrappedComponent {...this.props} />
                 </Aux>
             );
         }
     }
+
+    const mapStateToProps = state => {
+        return {
+            popup: state.popup.popup,
+            message: state.popup.message,
+            redirect: state.popup.redirect
+        }
+    }
+      
+    const mapDispatchToProps = dispatch => {
+        return {
+            onClosePopup: () => dispatch(actions.closePopup()),
+        }
+    } 
+    
+    return connect(mapStateToProps, mapDispatchToProps)(ExtendComponent)
 }
+
 
 export default withErrorHandler;

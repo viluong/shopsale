@@ -34,7 +34,6 @@ const ProductAutoComplete = (props) => {
     }
   }, [open, elements.options]);
 
-  console.log("sdsdsadas",elements)
   return (
     <div className={classes.root}>
       <Autocomplete
@@ -43,6 +42,7 @@ const ProductAutoComplete = (props) => {
         onChange={elements.onChange}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         defaultValue={elements.default}
+
         onOpen={() => {
           setOpen(true);
         }}
@@ -52,27 +52,37 @@ const ProductAutoComplete = (props) => {
         getOptionLabel={option => option.name}
         options={options}
         loading={loading}
-        renderInput={params => (
-          <TextField
-            {...params}
-            onChange={ev => {
-              if (ev.target.value !== "" || ev.target.value !== null) {
-                onChangeHandle(ev.target.value);
+        renderOption={(props, option) => {
+          return (
+            <li {...props} key={option.id}>
+              {option.name}
+            </li>
+          );
+        }}
+        renderInput={params => { 
+          return (
+            <TextField
+              {...params}
+              onChange={ev => {
+                if (ev.target.value !== "" || ev.target.value !== null) {
+                  onChangeHandle(ev.target.value);
+                }
+              }}
+              InputProps={{
+                ...params.InputProps,
+                disableUnderline: true,
+                endAdornment: (
+                  <React.Fragment>
+                    {loading ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null}
+                    {params.InputProps.endAdornment}
+                  </React.Fragment>
+                )
               }
-            }}
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <React.Fragment>
-                  {loading ? (
-                    <CircularProgress color="inherit" size={20} />
-                  ) : null}
-                  {params.InputProps.endAdornment}
-                </React.Fragment>
-              )
-            }}
+            } 
           />
-        )}
+        )}}
       />
     </div>
   );

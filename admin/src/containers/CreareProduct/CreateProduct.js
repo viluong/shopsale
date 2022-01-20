@@ -184,10 +184,7 @@ class CreateProduct extends Component {
       price: this.state.productForm['price'].elements.value,
       quantity: this.state.productForm['quantity'].elements.value
     }
-    const res = this.props.onCreateProduct(formData)
-    res.then((data) => {
-      this.props.history.push("/products")
-    })
+    this.props.onCreateProduct(formData)
   }
 
   render () {

@@ -26,7 +26,8 @@ const useStyles = (theme) => ({
   }
 });
 
-class DetailOrder extends Component {
+class CreateOrder extends Component {
+
   state = {
     orderForm: {
       ship_name: {
@@ -45,7 +46,7 @@ class DetailOrder extends Component {
           required: true,
         },
         touched: false,
-        isValid: true,
+        isValid: false,
         renderComponent: (elements) => <TextField {...elements} />
       },
       ship_email: {
@@ -60,9 +61,11 @@ class DetailOrder extends Component {
         styles: {
           xs: 6
         },
-        validation: {},
+        validation: {
+          type: 'email'
+        },
         touched: false,
-        isValid: true,
+        isValid: false,
         renderComponent: (elements) => <TextField {...elements} />
       },
       ship_phone: {
@@ -83,7 +86,7 @@ class DetailOrder extends Component {
           required: true,
         },
         touched: false,
-        isValid: true,
+        isValid: false,
         renderComponent: (elements) => <TextField {...elements} />
       },
       ship_address: {
@@ -102,7 +105,7 @@ class DetailOrder extends Component {
         validation: {
           required: true,
         },
-        isValid: true,
+        isValid: false,
         touched: false,
         renderComponent: (elements) => <TextField {...elements} />
       },
@@ -123,7 +126,7 @@ class DetailOrder extends Component {
           required: true,
         },
         touched: false,
-        isValid: true,
+        isValid: false,
         renderComponent: (elements) => <TextField {...elements} />
       },
       ship_district: {
@@ -143,7 +146,7 @@ class DetailOrder extends Component {
           required: true,
         },
         touched: false,
-        isValid: true,
+        isValid: false,
         renderComponent: (elements) => <TextField {...elements} />
       },
       payment_method: {
@@ -165,7 +168,7 @@ class DetailOrder extends Component {
           required: true,
         },
         touched: false,
-        isValid: true,
+        isValid: false,
         renderComponent: (elements) => <SelectionInput {...elements} />
       },
       delivery_fee: {
@@ -183,7 +186,6 @@ class DetailOrder extends Component {
           sm: 6
         },
         validation: {
-          required: true,
         },
         touched: false,
         isValid: true,
@@ -208,7 +210,6 @@ class DetailOrder extends Component {
           sm: 6
         },
         validation: {
-          required: true,
         },
         touched: false,
         isValid: true,
@@ -234,7 +235,6 @@ class DetailOrder extends Component {
           sm: 6
         },
         validation: {
-          required: true,
         },
         touched: false,
         isValid: true,
@@ -247,7 +247,7 @@ class DetailOrder extends Component {
         elements: {
           id: "order_lines",
           label: 'order_lines',
-          value: '',
+          value: [],
           enableDelete: true,
           enableAddNew: true,
           onDeleteRowDataGrid: (id) => this.onDeleteRowDataGrid(id),
@@ -262,16 +262,9 @@ class DetailOrder extends Component {
                 disableClickEventBubbling: true,
                 renderCell: (params) => {
                   let filteredProduct = this.props.products;
-                  let productDefault = ''
-                  const producDefaults = this.props.order.order_lines.filter((item) => item.id === params.id)
-                  productDefault = producDefaults[0]?.product
-                  if (!filteredProduct.some(item => item.id === productDefault?.id) && productDefault) {
-                    filteredProduct = [...filteredProduct, productDefault]
-                  }
                   const elements = {
                     options: filteredProduct,
                     id: params.id,
-                    default: productDefault,
                     onChange: (event, value) => {
                       event.preventDefault()
                       return this.onChangeProduct(params.id, value)
@@ -337,7 +330,6 @@ class DetailOrder extends Component {
           xs: 12
         },
         validation: {
-          required: true,
         },
         touched: false,
         isValid: true,
@@ -362,17 +354,16 @@ class DetailOrder extends Component {
           'delivery_fee',
           'total'
         ],
+        isValid: true,
         renderComponent: (elements) => <FormControl {...elements}>{ elements.value }</FormControl>
       }
     },
-    isFormValid: true,
+    isFormValid: false,
     isChangeInput: false,
     orderLineDelete: []
   }
   
   componentDidMount () {
-    const { id } = this.props.match.params;
-    this.props.onGetOrder(id);
     this.props.onSearchProducts()
   }
 
@@ -408,7 +399,6 @@ class DetailOrder extends Component {
       })
       this.setState({
         orderForm: orderFormUpdated,
-        isFormValid: true,
         isChangeInput: true
       })
     }
@@ -464,7 +454,6 @@ class DetailOrder extends Component {
     })
     this.setState({
       orderForm: newOrderForm,
-      isFormValid: true,
       isChangeInput: true,
       orderLineDelete: [
         ...orderLineDelete,
@@ -496,7 +485,6 @@ class DetailOrder extends Component {
 
     let isFormValid = true;
     for (let inputIdentifier in orderFormUpdated) {
-      console.log(inputIdentifier, orderFormUpdated[inputIdentifier].isValid)
       isFormValid = orderFormUpdated[inputIdentifier].isValid && isFormValid;
     }
 
@@ -507,16 +495,18 @@ class DetailOrder extends Component {
     })
   }
   
-  onComputeSubTotal = (data) => {
+  onComputeSubTotal = () => {
+    const data = this.state.orderForm;
     return data.order_lines.elements.value.reduce((result, item) => result = result + (item.price * item.quantity), 0)
   }
 
-  onComputeTotal = (data) => {
+  onComputeTotal = () => {
+    const data = this.state.orderForm;
     const subTotal = data.order_lines.elements.value.reduce((result, item) => result = result + (item.price * item.quantity), 0)
     return subTotal + data.delivery_fee.elements.value
   }
 
-  onSubmitOrderForm = (id) => {
+  onSubmitOrderForm = () => {
     const data = {
       ship_name: this.state.orderForm.ship_name.elements.value,
       ship_email: this.state.orderForm.ship_email.elements.value,
@@ -538,57 +528,45 @@ class DetailOrder extends Component {
       }),
       order_line_delete: this.state.orderLineDelete
     }
-    this.props.onEditOrder(id, data)    
+    this.props.onCreateOrder(data)    
   }
 
   render () {
-    const { id } = this.props.match.params;
     const { classes } = this.props;
     const orderForm = this.state.orderForm;
     let orderRender = '';
-    if (this.props.order) {
-      if (!this.state.isChangeInput) {   
-        for (let inputIdentifier in orderForm) {
-          orderForm[inputIdentifier].elements.value = this.props.order[inputIdentifier] ? this.props.order[inputIdentifier] : orderForm[inputIdentifier].elements.value;
-        }
-      } else {
-        for (let inputIdentifier in orderForm) {
-          if (orderForm[inputIdentifier].elements.hasOwnProperty('computeValue')) {
-            orderForm[inputIdentifier].elements.value = orderForm[inputIdentifier].elements.computeValue(orderForm)
-          }
-        }
+    for (let inputIdentifier in orderForm) {
+      if (orderForm[inputIdentifier].elements.hasOwnProperty('computeValue')) {
+        orderForm[inputIdentifier].elements.value = orderForm[inputIdentifier].elements.computeValue(orderForm)
       }
-      orderRender = (
-        <LayoutContent>
-          <OrderForm 
-            xs={12} 
-            paperClasses={classes.paper} 
-            InputForm={orderForm} 
-            onChangeInput={this.onChangeInput} 
-            isValidForm={this.state.isFormValid}
-            onSubmitForm={() => this.onSubmitOrderForm(id)} 
-            />
-        </LayoutContent>
-      )
-      return orderRender
     }
+    orderRender = (
+      <LayoutContent>
+        <OrderForm 
+          xs={12} 
+          paperClasses={classes.paper} 
+          InputForm={orderForm} 
+          onChangeInput={this.onChangeInput} 
+          isValidForm={this.state.isFormValid}
+          onSubmitForm={() => this.onSubmitOrderForm()} 
+          />
+      </LayoutContent>
+    )
     return orderRender
   }
 }
 
 const mapStateToProps = state => {
   return {
-    order: state.order.order,
     products: state.product.products
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onGetOrder: (id) => dispatch(actions.getOrder(id)),
     onSearchProducts: (value) => dispatch(actions.searchProducts()),
-    onEditOrder: (id, data) => dispatch(actions.editOrder(id, data))
+    onCreateOrder: (data) => dispatch(actions.createOrder(data))
   }
 } 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(withRouter(DetailOrder)));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(withRouter(CreateOrder)));

@@ -15,29 +15,18 @@ const useStyles = makeStyles((theme) => ({
 
 const SelectionInput = (props) => {
   const classes = useStyles();
-  // const [open, setOpen] = React.useState(false);
 
-  // const handleChange = (event) => {
-  //   setValue(event.target.value);
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
-
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
   const { options, label, value } = props;  
-  console.log("props", props)
+  const required = props.required ? ' *' : ''
   return (
     <FormControl  variant="standard" className={classes.formControl}>
-      <InputLabel id="select-label">{label}</InputLabel>
+      <InputLabel id="select-label">{label + required}</InputLabel>
       <Select
           labelId="select-label"
           id={props.id}
           value={value}  
           onChange={props.onChange}
+          error={props.error}
         >
           {
             options.map((option, key) => (

@@ -1,10 +1,12 @@
 import axios from '../../configs/axios';
 import * as actionTypes from './actionTypes';
 import * as services from '../services'
+import { openPopup } from './popup';
+import history from '../../configs/history';
 
-const fetchProduct = (products) => {
+const fetchProductSuccess = (products) => {
   return {
-    type: actionTypes.FETCH_PRODUCTS,
+    type: actionTypes.FETCH_PRODUCTS_SUCCESS,
     products: products
   }
 }
@@ -30,7 +32,7 @@ const searchProductFailed = () => {
 
 const generateProductSuccess = (product) => {
   return {
-    type: actionTypes.CREATE_PRODUCT,
+    type: actionTypes.CREATE_PRODUCT_SUCCESS,
     product: product
   }
 }
@@ -43,7 +45,7 @@ const generateProductFailed = () => {
 
 const getProductSuccess = (product) => {
   return {
-    type: actionTypes.GET_PRODUCT,
+    type: actionTypes.GET_PRODUCT_SUCCESS,
     product: product
   }
 }
@@ -56,7 +58,7 @@ const getProductFail = () => {
 
 const editProductSuccess = (product) => {
   return {
-    type: actionTypes.EDIT_PRODUCT,
+    type: actionTypes.EDIT_PRODUCT_SUCCESS,
     product: product
   } 
 }
@@ -72,7 +74,7 @@ export const initProducts = (page=1) => {
     let url = `/products/?page=${page}`;
     try {
       let res = await axios.get(url)
-      dispatch(fetchProduct(res.data));
+      dispatch(fetchProductSuccess(res.data));
     } catch (err) {
       dispatch(fetchProductFailed())
     } 
@@ -81,9 +83,6 @@ export const initProducts = (page=1) => {
 
 export const searchProducts = (search_text='') => {
   return async dispatch => {
-    // let url = '/products/';
-    // const search = search_text ? search_text.replace(/[^a-zA-Z0-9]/g, "") : '';
-    // url = search ? url + `?search=${search}`: url;
     try {
       let res = await services.searchProducts(search_text)
       dispatch(searchProductSuccess(res.data))
@@ -98,6 +97,8 @@ export const createProduct = (data) => {
     try {
       let res = await axios.post('/products/', data);
       dispatch(generateProductSuccess(res.data))
+      dispatch(openPopup('CREATE SUCCESSFULL!'))
+      history.push('/products')
     } catch (err) {
       dispatch(generateProductFailed())
     }
@@ -105,11 +106,12 @@ export const createProduct = (data) => {
 }
 
 export const editProduct = (id, data) => {
-  console.log("data", data)
   return async dispatch => {
     try {
       let res = await axios.put(`/products/${id}/`, data)
       dispatch(editProductSuccess(res.data))
+      dispatch(openPopup('CREATE SUCCESSFULL!'))
+      history.push('/products')
     } catch (err) {
       dispatch(editProductFail())
     }
