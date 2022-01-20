@@ -153,7 +153,12 @@ class DetailProduct extends Component {
     event.preventDefault();
     const newInput = newValue ? newValue : event.target.value;
     let isValid = false;
-    isValid = checkValidity(newValue ? this.state.productForm[field].elements.getOptionLabel(newValue) : event.target.value, this.state.productForm[field].validation)
+    isValid = checkValidity(newValue ? 
+      this.state.productForm[field].elements.getOptionLabel(newValue) : 
+      event.target.value, 
+      this.state.productForm[field].validation
+    )
+    
     const newElementInput = {
       elements: {
         ...this.state.productForm[field].elements,
@@ -186,11 +191,7 @@ class DetailProduct extends Component {
       price: this.state.productForm['price'].elements.value,
       quantity: this.state.productForm['quantity'].elements.value
     }
-    const res = this.props.onEditProduct(id, formData)
-    res.then((data) => {
-      this.props.history.push('/products')
-    })
-    
+    this.props.onEditProduct(id, formData)
   }
   
   render () {
@@ -247,7 +248,6 @@ const mapDispatchToProps = dispatch => {
     onInitCategories: () => dispatch(actions.getCategories()),
     onGetProduct: (id) => dispatch(actions.getProduct(id)),
     onEditProduct: (data) => dispatch(actions.editProduct(data))
-
   }
 } 
 

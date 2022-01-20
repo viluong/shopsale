@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Component } from 'react';
 import { withStyles } from '@mui/styles';
-import OrderList from '../../components/Admin/Orders/Orders';
+import CategoryList from '../../components/Admin/Categories/Categories';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
 import * as actions from '../../store/actions';
 
@@ -15,30 +15,25 @@ const useStyles = (theme) => ({
   }
 });
 
-class Orders extends Component {
+class Categories extends Component {
   
   componentDidMount () {
-    this.props.onFetchOrders()
+    this.props.onFetchCategories()
   }
   
   onChangePaging = (event, page) => {
     event.preventDefault();
-    this.props.onFetchOrders(page)
+    this.props.onFetchCategories(page)
   }
 
 
   render () {
     const { classes } = this.props;
-    let orders = this.props.orders
-    if ( this.props.order ) {
-      orders = [
-        this.props.order,
-        ...orders
-      ]
-    }
+    let categories = this.props.categories
+  
     return (
       <LayoutContent>
-        <OrderList xs={12} paperClasses={classes.paper} orders={orders} totalCount={this.props.totalCount} onChangePaging={this.onChangePaging}/>
+        <CategoryList xs={12} paperClasses={classes.paper} categories={categories} totalCount={this.props.totalCount} onChangePaging={this.onChangePaging}/>
       </LayoutContent>
     )
   }
@@ -46,16 +41,15 @@ class Orders extends Component {
 
 const mapStateToProps = state => {
   return {
-    orders: state.order.orders,
-    totalCount: state.order.totalCount,
-    order: state.order.order
+    categories: state.category.categories,
+    totalCount: state.category.totalCount,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onFetchOrders: (page) => dispatch(actions.fetchOrders(page)),
+    onFetchCategories: (page=1) => dispatch(actions.getCategories(page)),
   }
 } 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(Orders));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(Categories));

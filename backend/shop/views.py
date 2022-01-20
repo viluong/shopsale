@@ -37,7 +37,10 @@ class OrderView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        if self.request.user.is_anonymous:
+            serializer.save()
+        else:
+            serializer.save(user=self.request.user)
 
     def get_serializer_context(self):
         context = super(OrderView, self).get_serializer_context()
@@ -45,16 +48,56 @@ class OrderView(generics.ListCreateAPIView):
             context.update({
                 'fields': ['id', 'ship_name', 'created_at', 'ship_city', 'payment_method', 'user']
             })
+        if self.request.method == 'POST':
+            context.update({
+                'fields': [
+                    'id', 'order_lines', 'ship_name',
+                    'ship_email', 'ship_phone', 'ship_address',
+                    'ship_city', 'ship_district', 'payment_method',
+                    'delivery_fee', 'sub_total', 'total',
+                    'user', 'created_at', 'updated_at'
+                ]
+            })
         return context
 
 
-class OrderDetail(generics.RetrieveAPIView):
+class OrderDetail(generics.RetrieveUpdateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
+    def get_serializer_context(self):
+        context = super(OrderDetail, self).get_serializer_context()
+        if self.request.method == 'PUT':
+            context.update({
+                'fields': ['id', 'ship_name', 'created_at',
+                           'ship_city', 'payment_method', 'user',
+                           'order_line_delete', 'order_lines']
+            })
+        return context
 
-class CategoryList(generics.ListAPIView):
+
+class CategoryList(generics.ListCreateAPIView):
     authentication_classes = []
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get_serializer_context(self):
+        context = super(CategoryList, self).get_serializer_context()
+        if self.request.method == 'GET':
+            context.update({
+                'fields': ['id', 'name', 'image']
+            })
+
+        return context
+
+    def perform_create(self, serializer):
+        if self.request.user.is_anonymous:
+            serializer.save()
+        else:
+            serializer.save(user=self.request.user)
+
+
+class CategoryDetail(generics.RetrieveUpdateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 

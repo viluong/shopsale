@@ -46,9 +46,13 @@ const OrderForm = (props) => {
         item.elements.error = true
       }
 
+      if (item.validation.required) {
+        item.elements.required = item.validation.required
+      }
+
       return (
         <Grid key={index} item xs={item.styles.xs ? item.styles.xs: false} md={item.styles.md ? item.styles.md: false} lg={item.styles.lg ? item.styles.lg: false}>
-          { item.renderComponent({...item.elements, ...item.validation}) }
+          { item.renderComponent({...item.elements}) }
         </Grid>
       )
     })

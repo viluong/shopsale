@@ -4,6 +4,8 @@ from shop import views
 urlpatterns = [
     path('auth/', include('authentication.urls')),
     path('categories/', views.CategoryList.as_view()),
+    path('categories/<uuid:pk>/', views.CategoryDetail.as_view()),
+
     path('products/', views.ProductList.as_view()),
     path('products/<uuid:pk>/', views.ProductDetail.as_view()),
 

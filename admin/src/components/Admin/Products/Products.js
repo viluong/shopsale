@@ -55,7 +55,7 @@ const FooterContent = (onChangePaging, allowSeeMore, totalCount, classes) => {
   } else {
     return (      
       <div className={classes.paging}>
-        <Pagination count={ totalCount ? Math.ceil(totalCount / 6) : 1 } size="small" onChange={onChangePaging} />
+        <Pagination count={ totalCount ? Math.ceil(totalCount / 5) : 1 } size="small" onChange={onChangePaging} />
       </div>
     )
   }

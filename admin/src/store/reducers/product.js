@@ -3,13 +3,12 @@ import * as actionTypes from '../actions/actionTypes';
 const initialState = {
   products: [],
   totalCount: 0,
-  popup: false,
-  popupMessage: ''
+  product: null 
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.FETCH_PRODUCTS:
+    case actionTypes.FETCH_PRODUCTS_SUCCESS:
       return {
         ...state,
         products: action.products.results,
@@ -19,13 +18,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
       };
-    case actionTypes.CREATE_PRODUCT:
+    case actionTypes.CREATE_PRODUCT_SUCCESS:
       return {
         ...state,
-        popup: true,
-        popupMessage: 'CREATE SUCCESSFUL!'
+        product: action.product
       }
-    case actionTypes.GET_PRODUCT:
+    case actionTypes.GET_PRODUCT_SUCCESS:
       return {
         ...state,
         product: action.product
@@ -34,12 +32,9 @@ const reducer = (state = initialState, action) => {
       return {
         ...state
       }
-    case actionTypes.EDIT_PRODUCT:
+    case actionTypes.EDIT_PRODUCT_SUCCESS:
       return {
         ...state,
-        popup: true,
-        popupMessage: 'EDIT SUCCESSFUL!'
-
       }
     case actionTypes.SEARCH_PRODUCTS_SUCCESS:
       return {

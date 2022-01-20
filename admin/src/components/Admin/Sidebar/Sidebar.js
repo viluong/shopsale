@@ -9,9 +9,8 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems, secondaryListItems } from '../../UI/ListItem/ListItem';
+import MainMenu from '../../Admin/Menus/MainMenu';
 import Aux from '../../../hocs/HightAux/HightAux';
-import { List } from '@mui/material';
 import AvatarIcon from '../../UI/AvatarIcon/AvatarIcon';
 
 
@@ -133,9 +132,8 @@ const Sidebar = () => {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <MainMenu/>
         <Divider />
-        <List>{secondaryListItems}</List>
       </Drawer>
     </Aux>
   );
