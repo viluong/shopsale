@@ -4,8 +4,7 @@ import { withStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
 import CategoryForm from '../../components/Admin/Orders/OrderForm';
-import ImageCard from '../../components/UI/ImageCard/ImageCard';
-import FileInput from '../../components/UI/FileInput/FileInput';
+import DropDrapImage from '../../components/UI/DropDrapZone/DropDrapImage';
 import { withRouter } from "react-router-dom";
 import * as actions from '../../store/actions';
 import { checkValidity, updateObject } from '../../utils/utils';
@@ -26,24 +25,28 @@ class DetailCategory extends Component {
         elements: {
           id: 'image',
           name: 'image',
+          mappingField: 'image_url',
           value: '',
+          default: '',
           label: 'Image',
           fullWidth: true,
+          onChange: (files) => this.onChangeDrapDrop(files, 'image')
         },
         styles: {
-          xs: 2,
+          xs: 4,
         },
         validation: {
         },
         touched: false,
         isValid: true,
-        renderComponent: (elements) => <FileInput />
+        renderComponent: (elements) => <DropDrapImage {...elements} />
       },
       name: {
         elements: {
           id: 'name',
           name: 'name',
           value: '',
+          default: '',
           label: 'Name',
           fullWidth: true,
           autoComplete: "family-name",
@@ -63,6 +66,7 @@ class DetailCategory extends Component {
           id: 'description',
           name: 'description',
           value: '',
+          default: '',
           rows: 4,
           multiline: true,
           label: 'Description',
@@ -77,7 +81,6 @@ class DetailCategory extends Component {
         isValid: true,
         renderComponent: (elements) => <TextField {...elements} />
       },
-
     },
     isFormValid: true,
     isChangeInput: false,
@@ -85,12 +88,19 @@ class DetailCategory extends Component {
   
   componentDidMount () {
     const { id } = this.props.match.params;
-    this.props.onGetCategory(id);
+    this.props.onGetCategory(id); 
+  }
+
+  onChangeDrapDrop = (files, field) => {
+    const file = files.length > 0 ? files[0] : null; 
+    this.onChangeInput(null, file, field)
   }
 
   onChangeInput = (event, newValue, field) => {
-    event.preventDefault();
-    const newInput = newValue ? newValue : event.target.value;
+    if (event) {
+      event.preventDefault();
+    }
+    const newInput = newValue ? newValue : event?.target.value;
     let isValid = false;
     isValid = checkValidity(this.state.categoryForm[field].elements.getOptionLabel ? 
       this.state.categoryForm[field].elements.getOptionLabel(newInput) : 
@@ -98,7 +108,8 @@ class DetailCategory extends Component {
     const newElementInput = {
       elements: {
         ...this.state.categoryForm[field].elements,
-        value: newInput
+        value: newInput,
+        default: ''
       },
       isValid: isValid,
       touched: true
@@ -111,7 +122,6 @@ class DetailCategory extends Component {
 
     let isFormValid = true;
     for (let inputIdentifier in categoryFormUpdated) {
-      console.log(inputIdentifier, categoryFormUpdated[inputIdentifier].isValid)
       isFormValid = categoryFormUpdated[inputIdentifier].isValid && isFormValid;
     }
 
@@ -135,10 +145,12 @@ class DetailCategory extends Component {
     const { classes } = this.props;
     const categoryForm = this.state.categoryForm;
     let categoryRender = '';
-    if (this.props.category) {
-      if (!this.state.isChangeInput) {   
-        for (let inputIdentifier in categoryForm) {
-          categoryForm[inputIdentifier].elements.value = this.props.category[inputIdentifier] ? this.props.category[inputIdentifier] : categoryForm[inputIdentifier].elements.value;
+    console.log("categoryForm", this.state.categoryForm)
+    const category = this.props.category
+    if (category) {
+      if (!this.state.isChangeInput) {
+        for (let inputIdentifier in categoryForm) {    
+          categoryForm[inputIdentifier].elements.default = categoryForm[inputIdentifier].elements.mappingField ? category[categoryForm[inputIdentifier].elements.mappingField] : category[inputIdentifier];
         }
       } else {
         for (let inputIdentifier in categoryForm) {
@@ -159,7 +171,6 @@ class DetailCategory extends Component {
             />
         </LayoutContent>
       )
-      return categoryRender
     }
     return categoryRender
   }
@@ -173,7 +184,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onGetCategory: (id) => dispatch(actions.getCategory(id)),
+    onGetCategory: id => dispatch(actions.getCategory(id)),
     onEditCategory: (id, data) => dispatch(actions.editCategory(id, data))
   }
 } 

@@ -12,8 +12,8 @@ import Title from '../../UI/Title/Title';
 import Aux from '../../../hocs/HightAux/HightAux';
 
 // Generate Order Data
-const createData = (id, name) => {
-  return { id, name};
+const createData = (id, name, image) => {
+  return { id, name, image};
 }
 
 // const rows = [
@@ -64,7 +64,7 @@ const FooterContent = (onChangePaging, allowSeeMore, totalCount, classes) => {
 const Categories = (props) => {
   const { categories, allowSeeMore, title, totalCount, onChangePaging } = props;
   const rows = categories.map(category => {
-    return createData(category.id, category.name)
+    return createData(category.id, category.name, category.image_url)
   })
 
   const classes = useStyles();

@@ -1,13 +1,16 @@
 import json
+import os
 
-from rest_framework import generics, mixins, status
+from rest_framework import generics, status, parsers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import filters
 
-from shop.models import Product, Order, Category, OrderLine
+from shop.models import Product, Order, Category, OrderLine, image_categories_path
 from shop.serializers import ProductSerializer, OrderSerializer, CategorySerializer, OrderLineSerializer
 from shop.utils import get_products
+from django.conf import settings
+from storages.models import FactoryStorage
 
 
 class ProductList(generics.ListCreateAPIView):
@@ -21,7 +24,7 @@ class ProductList(generics.ListCreateAPIView):
         context = super(ProductList, self).get_serializer_context()
         if self.request.method == 'GET':
             context.update({
-                'fields': ['id', 'name', 'price', 'quantity', 'image', 'category']
+                'fields': ['id', 'name', 'price', 'quantity', 'image_url', 'category']
             })
         return context
 
@@ -80,15 +83,30 @@ class CategoryList(generics.ListCreateAPIView):
     authentication_classes = []
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
+    http_method_names = ['get', 'post']
 
     def get_serializer_context(self):
         context = super(CategoryList, self).get_serializer_context()
         if self.request.method == 'GET':
             context.update({
-                'fields': ['id', 'name', 'image']
+                'fields': ['id', 'name', 'image_url']
             })
 
         return context
+
+    def create(self, request, *args, **kwargs):
+        storage = FactoryStorage(settings.STORAGE_TYPE)
+        f = request.FILES['image']
+        url = os.path.join(image_categories_path(), f.name)
+        data = request.data
+        data['image'] = url
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        storage.upload(f, image_categories_path())
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         if self.request.user.is_anonymous:

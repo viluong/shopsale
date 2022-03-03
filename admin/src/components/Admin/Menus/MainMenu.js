@@ -101,9 +101,6 @@ const MainMenu = (props) => {
         hover: false
       }
     }
-    console.log(newMenus[index].hover)
-    console.log(menus[index].hover)
-    console.log(menu.hover)
 
     
     if (newMenus[index].hover !== menu.hover) {

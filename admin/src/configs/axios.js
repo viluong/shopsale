@@ -2,7 +2,10 @@ import axios from 'axios';
 import cookie from 'react-cookies'
 
 const instance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL
+    baseURL: process.env.REACT_APP_API_URL,
+    headers: {
+        "Content-type": "application/json"
+      }
 });
 
 instance.interceptors.request.use(function (config) {

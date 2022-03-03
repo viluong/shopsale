@@ -80,7 +80,7 @@ export const editCategory = (id, data) => {
   }
 }
 
-export const getCategory = (id) => {
+export const getCategory = id => {
   return async dispatch => {
     try {
       const res = await services.getCategory(id)

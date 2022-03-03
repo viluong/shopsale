@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from shop.models import Category, Product, Order, OrderLine
+from shop.models import Category, Product, Order, OrderLine, image_categories_path, image_products_path
 from authentication.serializers import UserSerializer
 
 
@@ -20,7 +20,7 @@ class CategorySerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'image', 'description']
+        fields = ['id', 'name', 'image', 'description', 'image_url']
 
 
 class ProductSerializer(DynamicFieldsModelSerializer):
