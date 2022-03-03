@@ -204,3 +204,13 @@ CELERY_RESULT_BACKEND = 'redis://redis:6379/1'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+STORAGE_TYPE = os.getenv('STORAGE_TYPE', 'default')
+LOCATION_STORAGE = os.getenv('STORAGE_LOCATION', 'files/')
+
+MEDIA_ROOT =  os.path.join(BASE_DIR, LOCATION_STORAGE)
+MEDIA_URL = '/files/'
+
+SITE_URL = 'http://localhost:8001'
+
+print(os.path.join(LOCATION_STORAGE, 'categories/'))

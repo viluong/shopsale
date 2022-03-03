@@ -27,7 +27,7 @@ class CreateCategory extends Component {
           name: 'image',
           value: '',
           label: 'Image',
-          onChange: (files) => this.onChangeDrapDrop(null, files, 'image')
+          onChange: (files) => this.onChangeDrapDrop(files, 'image')
         },
         styles: {
           xs: 4,
@@ -80,13 +80,13 @@ class CreateCategory extends Component {
     isFormValid: true,
   }
   
-  onChangeDrapDrop = (event, files, field) => {
+  onChangeDrapDrop = (files, field) => {
     const file = files.length > 0 ? files[0] : null; 
-    this.onChangeInput(event, file, field)
+    this.onChangeInput(null, file, field)
   }
 
   onChangeInput = (event, newValue, field) => {
-    console.log("1212")
+    console.log("event", event)
     if (event) {
       event.preventDefault();
     }
@@ -115,7 +115,7 @@ class CreateCategory extends Component {
     for (let inputIdentifier in categoryFormUpdated) {
       isFormValid = categoryFormUpdated[inputIdentifier].isValid && isFormValid;
     }
-
+    console.log("categoryFormUpdated", categoryFormUpdated)
     this.setState({
       categoryForm: categoryFormUpdated,
       isFormValid: isFormValid
@@ -123,10 +123,17 @@ class CreateCategory extends Component {
   }
 
   creareCategory = () => {
-    const formData = {
-      name: this.state.categoryForm['name'].elements.value,
-      description: this.state.categoryForm['description'].elements.value
-    }
+    let formData = new FormData();
+    // console.log("image", image)
+    formData.append("image", this.state.categoryForm['image'].elements.value)
+    formData.append("name", this.state.categoryForm['name'].elements.value)
+    formData.append("description", this.state.categoryForm['description'].elements.value)
+
+    // const formData = {
+      // image: this.state.categoryForm['image'].elements.value,
+      // name: this.state.categoryForm['name'].elements.value,
+      // description: this.state.categoryForm['description'].elements.value
+    // }
     this.props.onCreateCategory(formData)
   }
 

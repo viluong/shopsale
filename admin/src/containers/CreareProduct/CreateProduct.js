@@ -4,6 +4,7 @@ import { withStyles } from '@mui/styles';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
 import ProductForm from '../../components/Admin/Products/CreateProduct';
 import TextField from '@mui/material/TextField';
+import DropDrapImage from '../../components/UI/DropDrapZone/DropDrapImage';
 import Autocomplete from '../../components/UI/Autocomplete/Autocomplete';
 import { withRouter } from "react-router-dom";
 import * as actions from '../../store/actions';
@@ -21,6 +22,23 @@ const useStyles = (theme) => ({
 class CreateProduct extends Component {
   state = {
     productForm: {
+      image: {
+        elements: {
+          id: 'image',
+          name: 'image',
+          value: '',
+          label: 'Image',
+          onChange: (files) => this.onChangeDrapDrop(files, 'image')
+        },
+        styles: {
+          xs: 4,
+        },
+        validation: {
+        },
+        touched: false,
+        isValid: true,
+        renderComponent: (elements) => <DropDrapImage {...elements} />
+      },
       name: {
         elements: {
           id: 'name',
@@ -40,25 +58,7 @@ class CreateProduct extends Component {
         isValid: false,
         renderComponent: (elements) => <TextField {...elements} />
       },
-      image: {
-        elements: {  
-          id: 'image',
-          name: 'image',
-          value: '',
-          label: 'Image',
-          fullWidth: true,
-          autoComplete: "family-name"
-        },
-        styles: {
-          xs: 12
-        },
-        validation: {
-          required: true,
-        },
-        touched: false,
-        isValid: false,
-        renderComponent: (elements) => <TextField {...elements} />
-      },
+
       description: {
         elements: {
           id: 'description',
@@ -146,12 +146,20 @@ class CreateProduct extends Component {
   componentDidMount () {
     this.props.onInitCategories()
   }
+  
+  onChangeDrapDrop = (files, field) => {
+    const file = files.length > 0 ? files[0] : null; 
+    this.onChangeInput(null, file, field)
+  }
 
   onChangeInput = (event, newValue, field) => {
-    event.preventDefault();
-    const newInput = newValue ? newValue : event.target.value  
+    console.log("event", event, newValue, field)
+    if (event) {
+      event.preventDefault();
+    }
+    const newInput = newValue ? newValue : event?.target.value  
     let isValid = false;
-    isValid = checkValidity(newValue ? this.state.productForm[field].elements.getOptionLabel(newValue) : event.target.value, this.state.productForm[field].validation)
+    isValid = checkValidity(newValue ? this.state.productForm[field].elements.getOptionLabel(newValue) : event?.target.value, this.state.productForm[field].validation)
     const inputElementChanged = updateObject(this.state.productForm[field], {
       elements: {
         ...this.state.productForm[field].elements,

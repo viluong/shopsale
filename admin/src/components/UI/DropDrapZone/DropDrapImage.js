@@ -22,7 +22,8 @@ const useStyles = makeStyles(
     },
 
     rootPreview: {
-      top: 0,
+      top: '32px',
+      left: '32px',
       height: '100%',
       width: '100%',
       position: 'absolute',
@@ -34,8 +35,9 @@ const useStyles = makeStyles(
   })
 );
 
+
 const DropDrapZone = (props) => {
-  const classes = useStyles()
+  const classes = useStyles() 
   const elements = {
     fullWidth: true,
     acceptedFiles: ['image/*', 'video/*', 'application/*'],
@@ -43,6 +45,7 @@ const DropDrapZone = (props) => {
     showPreviewsInDropzone: true,
     filesLimit: 1,
     showAlerts: false,
+    initialFiles: [props.default],
     dropzoneClass: classes.dropZone,
     dropzoneText: "Upload image",
     previewGridClasses: {
@@ -51,13 +54,14 @@ const DropDrapZone = (props) => {
     },
     getPreviewIcon: (file) => {
       console.log("file", file)
-      if (file.file.type.split('/')[0] === 'image')
+      if (file.file?.type.split('/')[0] === 'image') {
         return (
           <img className={classes.previewImg} role="presentation" src={file.data} alt="" />
         );
+      }
     },
-    ...props
   }
+
   return (
     <DropzoneArea
       { ...elements }

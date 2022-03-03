@@ -24,7 +24,7 @@ const InputForm = (props) => {
   const renderForm = () => {
     const form = Object.keys(productForm).map((key, index) => {
       let item = productForm[key]
-      item.elements['onChange'] = (event, newValue) => onChangeInput(event, newValue, key);
+      item.elements['onChange'] = item.elements.onChange ? item.elements.onChange : (event, newValue) => onChangeInput(event, newValue, key);
       item.elements.error = false
       if ( !item.isValid && item.validation && item.touched) {
         item.elements.error = true

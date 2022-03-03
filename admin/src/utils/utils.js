@@ -36,3 +36,22 @@ export const updateObject = (oldObject, updatedProperties) => {
       ...updatedProperties
   };
 };
+
+export const dataUrlToFile = (dataurl, filename) => {
+  const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+  bstr = atob(arr[1]),n = bstr.length, u8arr = new Uint8Array(n);
+  let i = n
+  while(i--) {
+    u8arr[i] = bstr.charCodeAt(i);
+  }
+  return new File([u8arr], filename, {type:mime});
+}
+
+export const toDataURL = async url => await fetch(url)
+  .then(response => response.blob())
+  .then(blob => new Promise((resolve, reject) => {
+  const reader = new FileReader()
+  reader.onloadend = () => resolve(reader.result)
+  reader.onerror = reject
+  reader.readAsDataURL(blob)
+}))

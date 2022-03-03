@@ -40,6 +40,9 @@ const OrderForm = (props) => {
       }
 
       item.elements['onChange'] = item.elements.onChange ? item.elements.onChange : (event, newValue) => onChangeInput(event, newValue, key);
+      if (item.elements.default) {
+        item.elements.value = item.elements.default
+      }
       item.elements.error = false
 
       if ( !item.isValid && item.validation && item.touched) {
@@ -49,7 +52,6 @@ const OrderForm = (props) => {
       if (item.validation.required) {
         item.elements.required = item.validation.required
       }
-
       return (
         <Grid key={index} item xs={item.styles.xs ? item.styles.xs: false} md={item.styles.md ? item.styles.md: false} lg={item.styles.lg ? item.styles.lg: false}>
           { item.renderComponent({...item.elements}) }
