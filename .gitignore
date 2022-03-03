@@ -48,3 +48,5 @@ frontend/.next/
 frontend/.env
 backend/.env
 admin/.env
+
+admin/.babelrc
