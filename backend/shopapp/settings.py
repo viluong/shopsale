@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'authentication.apps.AuthenticationConfig',
     'shop.apps.ShopConfig',
-    'exception.apps.ExceptionConfig'
+    'exception.apps.ExceptionConfig',
 ]
 
 MIDDLEWARE = [
@@ -144,7 +144,7 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB', 'postgres'),
         'USER': os.getenv('POSTGRES_USER', 'postgres'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
-        'HOST': os.getenv('POSTGRES_HOST', 'db'),
+        'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
         'PORT': os.getenv('POSTGRES_PORT', '5432'),
     }
 }
@@ -204,3 +204,13 @@ CELERY_RESULT_BACKEND = 'redis://redis:6379/1'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+STORAGE_TYPE = os.getenv('STORAGE_TYPE', 'default')
+LOCATION_STORAGE = os.getenv('STORAGE_LOCATION', 'files/')
+
+MEDIA_ROOT =  os.path.join(BASE_DIR, LOCATION_STORAGE)
+MEDIA_URL = '/files/'
+
+SITE_URL = 'http://localhost:8001'
+
+print(os.path.join(LOCATION_STORAGE, 'categories/'))

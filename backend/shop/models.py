@@ -1,9 +1,27 @@
+import os
 import uuid
+from django.conf import settings
 from django.db import models
 from itertools import chain
 
 from authentication.models import User
 from shop.enums import PaymentMethod
+
+
+def image_categories_path():
+    return os.path.join(settings.LOCATION_STORAGE, 'categories/')
+
+
+def image_products_path():
+    return os.path.join(settings.LOCATION_STORAGE, 'products/')
+
+
+def get_url_storage():
+    url = settings.SITE_URL
+    if settings.STORAGE_TYPE == 'aws':
+        pass
+
+    return url
 
 
 class BaseModel(models.Model):
@@ -33,13 +51,19 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['-created_at']
 
 
 class Category(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=250, null=False, blank=False)
-    image = models.URLField(null=True, blank=True)
+    image = models.CharField(null=True, blank=True, max_length=150)
     description = models.TextField(null=True, blank=True)
+
+    @property
+    def image_url(self):
+        url = get_url_storage()
+        return '{}/{}'.format(url, self.image)
 
     def __str__(self):
         return self.name
@@ -48,12 +72,17 @@ class Category(BaseModel):
 class Product(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=250, null=False, blank=False)
-    image = models.URLField(null=True, blank=True)
+    image = models.CharField (null=True, blank=True, max_length=150)
     description = models.TextField(null=True, blank=True)
     price = models.FloatField(default=0)
     quantity = models.IntegerField(default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     is_public = models.BooleanField(default=False)
+    
+    @property
+    def image_url(self):
+        url = get_url_storage()
+        return '{}/{}'.format(url, self.image)
 
     def __str__(self):
         return self.name

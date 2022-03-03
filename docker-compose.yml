@@ -9,9 +9,10 @@ services:
     env_file:
       ./backend/.env
     volumes:
-      - ./backend/initdb.sh:/docker-entrypoint-initdb.d/initdb.sh
+      - ./backend/dump.sql:/docker-entrypoint-initdb.d/dump.sql
       - ./backend/.env:/backend/usr/app/.env
       - ./backend/dump.sql:/backend/usr/app/dump.sql
+
   backend:
     image: shopsale_backend
     env_file:
