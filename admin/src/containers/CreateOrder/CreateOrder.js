@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
-import OrderForm from '../../components/Admin/Orders/OrderForm';
+import OrderForm from '../../components/Admin/Form/InputForm';
 import DataGrid from '../../components/UI/DataGrid/DataGrid';
 import { withRouter } from "react-router-dom";
 import * as actions from '../../store/actions';
@@ -545,7 +545,7 @@ class CreateOrder extends Component {
         <OrderForm 
           xs={12} 
           paperClasses={classes.paper} 
-          InputForm={orderForm} 
+          inputForm={orderForm} 
           onChangeInput={this.onChangeInput} 
           isValidForm={this.state.isFormValid}
           onSubmitForm={() => this.onSubmitOrderForm()} 

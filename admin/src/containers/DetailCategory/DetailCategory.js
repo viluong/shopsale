@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
-import CategoryForm from '../../components/Admin/Orders/OrderForm';
+import CategoryForm from '../../components/Admin/Form/InputForm';
 import DropDrapImage from '../../components/UI/DropDrapZone/DropDrapImage';
 import { withRouter } from "react-router-dom";
 import * as actions from '../../store/actions';
@@ -145,12 +145,13 @@ class DetailCategory extends Component {
     const { classes } = this.props;
     const categoryForm = this.state.categoryForm;
     let categoryRender = '';
-    console.log("categoryForm", this.state.categoryForm)
     const category = this.props.category
     if (category) {
       if (!this.state.isChangeInput) {
         for (let inputIdentifier in categoryForm) {    
-          categoryForm[inputIdentifier].elements.default = categoryForm[inputIdentifier].elements.mappingField ? category[categoryForm[inputIdentifier].elements.mappingField] : category[inputIdentifier];
+          categoryForm[inputIdentifier].elements.default = categoryForm[inputIdentifier].elements.mappingField 
+          ? category[categoryForm[inputIdentifier].elements.mappingField] 
+          : category[inputIdentifier];
         }
       } else {
         for (let inputIdentifier in categoryForm) {
@@ -164,7 +165,7 @@ class DetailCategory extends Component {
           <CategoryForm 
             xs={12} 
             paperClasses={classes.paper} 
-            InputForm={categoryForm} 
+            inputForm={categoryForm} 
             onChangeInput={this.onChangeInput} 
             isValidForm={this.state.isFormValid}
             onSubmitForm={() => this.onSubmitCategoryForm(id)} 

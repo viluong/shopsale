@@ -18,19 +18,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const OrderForm = (props) => {
-  const { InputForm, onChangeInput, onSubmitForm, isValidForm } = props;
+const InputForm = (props) => {
+  const { inputForm, onChangeInput, onSubmitForm, isValidForm } = props;
   const classes = useStyles();
   const renderForm = () => {
-    const form = Object.keys(InputForm).map((key, index) => {
-      let item = InputForm[key]
+    const form = Object.keys(inputForm).map((key, index) => {
+      let item = inputForm[key]
 
       if (item.disableDisplay) {
         return '';
       }
       if (item.include_data) {
         item.elements.value = item.include_data.map((field, index) => {
-          let elementForm = InputForm[field]
+          let elementForm = inputForm[field]
           return (
             <Grid key={index} item xs={elementForm.styles?.xs ? elementForm.styles.xs: false} md={elementForm.styles?.md ? elementForm.styles.md: false} lg={elementForm.styles?.lg ? elementForm.styles.lg: false}>
               { elementForm.renderComponent({...elementForm.elements, ...elementForm.validation}) }
@@ -43,8 +43,8 @@ const OrderForm = (props) => {
       if (item.elements.default) {
         item.elements.value = item.elements.default
       }
-      item.elements.error = false
 
+      item.elements.error = false
       if ( !item.isValid && item.validation && item.touched) {
         item.elements.error = true
       }
@@ -63,7 +63,7 @@ const OrderForm = (props) => {
   return (
     <Aux>
         <Typography variant="h6" gutterBottom>
-          Order Form
+          { props.tilteForm ? props.tilteForm : 'Form' }
         </Typography>
         <Grid container spacing={3}>
           { renderForm() }
@@ -83,4 +83,4 @@ const OrderForm = (props) => {
   )
 }
 
-export default OrderForm;
+export default InputForm;

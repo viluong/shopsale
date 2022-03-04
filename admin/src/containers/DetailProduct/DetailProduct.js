@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@mui/styles';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
-import ProductForm from '../../components/Admin/Products/CreateProduct';
+import ProductForm from '../../components/Admin/Form/InputForm';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '../../components/UI/Autocomplete/Autocomplete';
+import DropDrapImage from '../../components/UI/DropDrapZone/DropDrapImage';
 import { withRouter } from "react-router-dom";
 import * as actions from '../../store/actions';
 import { checkValidity, updateObject } from '../../utils/utils';
@@ -21,6 +22,25 @@ const useStyles = (theme) => ({
 class DetailProduct extends Component {
   state = {
     productForm: {
+      image: {
+        elements: {  
+          id: 'image',
+          name: 'image',
+          value: '',
+          default: '',
+          label: 'Image',
+          fullWidth: true,
+          onChange: (files) => this.onChangeDrapDrop(files, 'image')
+        },
+        styles: {
+          xs: 4
+        },
+        validation: {
+        },
+        touched: false,
+        isValid: true,
+        renderComponent: (elements) => <DropDrapImage {...elements} />
+      },
       name: {
         elements: {
           id: 'name',
@@ -32,25 +52,6 @@ class DetailProduct extends Component {
         },
         styles: {
           xs: 12,
-        },
-        validation: {
-          required: true,
-        },
-        touched: false,
-        isValid: true,
-        renderComponent: (elements) => <TextField {...elements} />
-      },
-      image: {
-        elements: {  
-          id: 'image',
-          name: 'image',
-          value: '',
-          label: 'Image',
-          fullWidth: true,
-          autoComplete: "family-name"
-        },
-        styles: {
-          xs: 12
         },
         validation: {
           required: true,
@@ -149,13 +150,20 @@ class DetailProduct extends Component {
     this.props.onGetProduct(id)
   }
 
+  onChangeDrapDrop = (files, field) => {
+    const file = files.length > 0 ? files[0] : null; 
+    this.onChangeInput(null, file, field)
+  }
+
   onChangeInput = (event, newValue, field) => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     const newInput = newValue ? newValue : event.target.value;
     let isValid = false;
-    isValid = checkValidity(newValue ? 
-      this.state.productForm[field].elements.getOptionLabel(newValue) : 
-      event.target.value, 
+    isValid = checkValidity(this.state.productForm[field].elements.getOptionLabel ? 
+      this.state.productForm[field].elements.getOptionLabel(newInput) : 
+      newInput, 
       this.state.productForm[field].validation
     )
     
@@ -200,17 +208,18 @@ class DetailProduct extends Component {
     let productRender = '';
     if (this.props.product && !this.state.isChangeInput) {
       for (let inputIdentifier in productForm) {
-        productForm[inputIdentifier].elements.value = this.props.product[inputIdentifier]
-        productForm[inputIdentifier].elements.default = this.props.product[inputIdentifier]
-
+        productForm[inputIdentifier].elements.default = productForm[inputIdentifier].elements.mappingField 
+          ? this.props.product[productForm[inputIdentifier].elements.mappingField] 
+          : this.props.product[inputIdentifier];
       }
       productForm.category.elements.options = this.props.categories;
       productRender = (
         <LayoutContent>
-          <ProductForm 
+          <ProductForm
+            titleForm={'Product Form'}
             xs={12} 
             paperClasses={classes.paper} 
-            productForm={productForm} 
+            inputForm={productForm} 
             onChangeInput={this.onChangeInput} 
             isValidForm={this.state.isFormValid}
             onSubmitForm={this.editProduct}
@@ -224,7 +233,7 @@ class DetailProduct extends Component {
           <ProductForm 
             xs={12} 
             paperClasses={classes.paper} 
-            productForm={productForm} 
+            inputForm={productForm} 
             onChangeInput={this.onChangeInput} 
             isValidForm={this.state.isFormValid}
             onSubmitForm={() => this.editProduct(this.props.product.id)}

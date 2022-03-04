@@ -24,7 +24,20 @@ const theme = createTheme({
         variant: 'standard'
       }
     },
-  }
+    MuiTypography: {
+      styleOverrides: {
+        body1: {
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          fontSize: '16px',
+          lineHeight: '150%',
+          letterSpacing: '0.15px',
+          color: 'rgba(0, 0, 0, 0.87)'
+        }
+      }
+    }
+  },
+  
 });
 
 export default theme;

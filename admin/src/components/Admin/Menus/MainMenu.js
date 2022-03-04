@@ -4,40 +4,26 @@ import LayersIcon from '@mui/icons-material/Layers';
 import ImportantDevices from '@mui/icons-material/ImportantDevices';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import PersonIcon from '@mui/icons-material/Person';
-import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import Link from '@mui/material/Link';
-import Box from '@mui/material/Box';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import MenuList from '@mui/material/MenuList';
+import ListItemText from '@mui/material/ListItemText';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import Aux from '../../../hocs/HightAux/HightAux';
+import history from '../../../configs/history';
+import styles from './MainMenu.module.scss';
 
-
-const Item = (props) => {
-  const { ...other } = props;
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: '1px 8px 8px 50px',
-        color: 'inherit'
-      }}
-      {...other}
-    />
-  );
-}
 
 const MainMenu = (props) => {
   const list_menu = [
     {
       name: 'DashBoard',
-      renderIconMenu: () => <DashboardIcon fontSize="inherit" fontWeight="inherit" />,
-      link: '/',
+      renderIconMenu: () => <DashboardIcon fontSize="inherit" fontWeight="inherit" className={styles.MenuItemIcon} />,
+      link: '/dashboard',
     },
     {
       name: 'Categories',
-      renderIconMenu: () => <LayersIcon fontSize="inherit" fontWeight="inherit" />,
+      renderIconMenu: () => <LayersIcon fontSize="inherit" fontWeight="inherit" className={styles.MenuItemIcon} />,
       link: '/categories',
       hover: false,
       sub_menus: [
@@ -51,7 +37,7 @@ const MainMenu = (props) => {
     },
     {
       name: 'Products',
-      renderIconMenu: () => <ImportantDevices fontSize="inherit" fontWeight="inherit" />,
+      renderIconMenu: () => <ImportantDevices fontSize="inherit" fontWeight="inherit" className={styles.MenuItemIcon} />,
       link: '/products',
       hover: false,
       sub_menus: [
@@ -65,7 +51,7 @@ const MainMenu = (props) => {
     },
     {
       name: 'Orders',
-      renderIconMenu: () => <ShoppingCart fontSize="inherit" fontWeight="inherit" />,
+      renderIconMenu: () => <ShoppingCart fontSize="inherit" fontWeight="inherit" className={styles.MenuItemIcon} />,
       link: '/orders',
       hover: false,
       sub_menus: [
@@ -79,7 +65,7 @@ const MainMenu = (props) => {
     },
     {
       name: 'Users',
-      renderIconMenu: () => <PersonIcon fontSize="inherit" fontWeight="inherit" />,
+      renderIconMenu: () => <PersonIcon fontSize="inherit" fontWeight="inherit" className={styles.MenuItemIcon} />,
       link: '/users'
     }
   ]
@@ -107,62 +93,36 @@ const MainMenu = (props) => {
       setMenus([...newMenus])
     }
   }
-  return ( 
-    <MenuList dense>
-      {
-        menus.map((menu) => { return (
-          <div 
-            className={menu.name} 
-            key={menu.name} 
-            onMouseOver={(event) => handleHover(event, menu)} 
-            onMouseOut={(event) => handleHover(event, menu)}
-            >
-            <Link href={menu.link ? menu.link : '#'} 
-              underline="none" color="inherit" > 
-              <MenuItem 
-                sx={{
-                  color: 'rgba(0, 0, 0, 0.64)',
-                  fontWeight: '400',
-                  fontSize: '1.200rem',
-                }}>
-                <ListItemIcon fontSize="inherit" fontWeight="inherit">
-                  { menu.renderIconMenu() }
-                </ListItemIcon>
-                  {menu.name}
-              </MenuItem>
-            </Link>
-            {
-              <Box 
-                component='span'
-                onMouseOver={(event) => handleHover(event, menu)} 
-                onMouseOut={(event) => handleHover(event, menu)}
-                sx={{
-                  display: menu.hover ? 'flex' : 'none',
-                  flexDirection: 'column',
-                  color: 'rgba(0, 0, 0, 0.54)',
-                  fontWeight: '400',
-                  fontSize: '1.130rem',
-                  paddingTop: '5px',
-                  paddingBottom: '5px',
-                }}>
-                { 
-                  menu.sub_menus ? menu.sub_menus.map((sub_menu) => {
-                    return (
-                      <Item key={sub_menu.id}>                
-                        <ArrowForwardIosIcon fontWeight={400} fontSize='0.830rem' />
-                        <Link href={sub_menu.link ? sub_menu.link : '#'} underline="none" color="inherit"> 
-                          { sub_menu.label }
-                        </Link>
-                      </Item> 
-                    )
-                  }) : ''
-                }
-              </Box>
-            }
-          </div>
+  return (
+    <div className={styles.MainMenu}>
+      <Divider className={styles.MenuItemDivider} />
+      <List className={styles.ListMenu} component="div">
+        {
+          menus.map((menu) => { 
+            const isActived = history.location.pathname === menu.link ? true : false;
+            console.log("isActived", isActived)
+            return (
+              <Aux key={menu.name}>
+                <Divider className={styles.MenuItemDivider} />
+                <ListItem button component="a" href={menu.link ? menu.link : '#'} 
+                    underline="none" color="inherit" 
+                  className={isActived ? styles.ListItemMenu  + ' ' + styles.ListItemMenuActive : styles.ListItemMenu }
+                  onMouseOver={(event) => handleHover(event, menu)} 
+                  onMouseOut={(event) => handleHover(event, menu)} >
+                    <ListItemIcon className={styles.MenuListItemIcon} >
+                      {menu.renderIconMenu()}
+                    </ListItemIcon>
+                    <ListItemText className={styles.MenuItemText}>
+                      {menu.name}
+                    </ListItemText>
+                </ListItem>
+              </Aux>
+            )
+          }
         )}
-      )}
-    </MenuList>
+        <Divider className={styles.MenuItemDivider} />
+      </List>
+    </div>
   )
 }
 

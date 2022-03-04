@@ -3,7 +3,6 @@ import * as actionTypes from '../actions/actionTypes';
 const initialState = {
   products: [],
   totalCount: 0,
-  product: null 
 };
 
 const reducer = (state = initialState, action) => {
@@ -21,7 +20,6 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CREATE_PRODUCT_SUCCESS:
       return {
         ...state,
-        product: action.product
       }
     case actionTypes.GET_PRODUCT_SUCCESS:
       return {

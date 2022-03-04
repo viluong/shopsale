@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@mui/styles';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
-import CategoryForm from '../../components/Admin/Orders/OrderForm';
+import CategoryForm from '../../components/Admin/Form/InputForm';
 import TextField from '@mui/material/TextField';
 import DropDrapImage from '../../components/UI/DropDrapZone/DropDrapImage';
 import { withRouter } from "react-router-dom";
@@ -86,7 +86,6 @@ class CreateCategory extends Component {
   }
 
   onChangeInput = (event, newValue, field) => {
-    console.log("event", event)
     if (event) {
       event.preventDefault();
     }
@@ -142,10 +141,11 @@ class CreateCategory extends Component {
     const categoryForm = this.state.categoryForm;
     return (
       <LayoutContent>
-        <CategoryForm 
-          xs={12} 
+        <CategoryForm
+          titleForm={'Category Form'}
+          xs={12}
           paperClasses={classes.paper} 
-          InputForm={categoryForm} 
+          inputForm={categoryForm} 
           onChangeInput={this.onChangeInput} 
           isValidForm={this.state.isFormValid}
           onSubmitForm={this.creareCategory}

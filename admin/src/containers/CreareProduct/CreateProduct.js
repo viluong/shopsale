@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@mui/styles';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
-import ProductForm from '../../components/Admin/Products/CreateProduct';
+import ProductForm from '../../components/Admin/Form/InputForm';
 import TextField from '@mui/material/TextField';
 import DropDrapImage from '../../components/UI/DropDrapZone/DropDrapImage';
 import Autocomplete from '../../components/UI/Autocomplete/Autocomplete';
@@ -27,6 +27,7 @@ class CreateProduct extends Component {
           id: 'image',
           name: 'image',
           value: '',
+          default: '',
           label: 'Image',
           onChange: (files) => this.onChangeDrapDrop(files, 'image')
         },
@@ -140,7 +141,8 @@ class CreateProduct extends Component {
       }
     },
     isValidForm: true,
-    product: {}
+    product: {},
+    isFinished: false
   }
   
   componentDidMount () {
@@ -153,13 +155,12 @@ class CreateProduct extends Component {
   }
 
   onChangeInput = (event, newValue, field) => {
-    console.log("event", event, newValue, field)
     if (event) {
       event.preventDefault();
     }
     const newInput = newValue ? newValue : event?.target.value  
     let isValid = false;
-    isValid = checkValidity(newValue ? this.state.productForm[field].elements.getOptionLabel(newValue) : event?.target.value, this.state.productForm[field].validation)
+    isValid = checkValidity(this.state.productForm[field].elements.getOptionLabel ? this.state.productForm[field].elements.getOptionLabel(newInput) : newInput, this.state.productForm[field].validation)
     const inputElementChanged = updateObject(this.state.productForm[field], {
       elements: {
         ...this.state.productForm[field].elements,
@@ -201,10 +202,11 @@ class CreateProduct extends Component {
     productForm.category.elements.options = this.props.categories;
     return (
       <LayoutContent>
-        <ProductForm 
+        <ProductForm
+          tilteForm={'Product Form'} 
           xs={12} 
           paperClasses={classes.paper} 
-          productForm={productForm} 
+          inputForm={productForm} 
           onChangeInput={this.onChangeInput} 
           isValidForm={this.state.isFormValid}
           onSubmitForm={this.creareProduct}

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Component } from 'react';
 import { withStyles } from '@mui/styles';
-import CategoryList from '../../components/Admin/Categories/Categories';
+import CategoryList from '../../components/Admin/ListItem/ListItem';
 import LayoutContent from '../../components/UI/LayoutContent/LayoutContent';
 import * as actions from '../../store/actions';
 
@@ -16,6 +16,10 @@ const useStyles = (theme) => ({
 });
 
 class Categories extends Component {
+
+  state = {
+    page: 1
+  }
   
   componentDidMount () {
     this.props.onFetchCategories()
@@ -24,16 +28,50 @@ class Categories extends Component {
   onChangePaging = (event, page) => {
     event.preventDefault();
     this.props.onFetchCategories(page)
+    this.setState({
+      page: page
+    })
   }
 
 
   render () {
     const { classes } = this.props;
-    let categories = this.props.categories
-  
+    const categories = this.props.categories
+    const rowData = [
+      {
+        label: 'Image',
+        name: 'image',
+        renderValue: (elements) => (
+          <img 
+            src={elements.image} 
+            className={elements.styleName ? elements.styleName: ''} 
+            alt={elements.name} 
+          />
+        ),
+        styles: {
+          size: "small"
+        }
+      },
+      {
+        label: 'Name',
+        name: 'name',
+        styles: {
+
+        }
+      }
+    ]
     return (
       <LayoutContent>
-        <CategoryList xs={12} paperClasses={classes.paper} categories={categories} totalCount={this.props.totalCount} onChangePaging={this.onChangePaging}/>
+        <CategoryList 
+          xs={12}
+          title='Categories'
+          heightRow={60}
+          rowData={rowData}
+          currentPage={this.state.page} 
+          paperClasses={classes.paper} 
+          data={categories} 
+          totalCount={this.props.totalCount} 
+          onChangePaging={this.onChangePaging}/>
       </LayoutContent>
     )
   }

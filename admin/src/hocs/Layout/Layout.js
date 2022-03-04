@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   container: {
+    marginLeft: '9%',
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
   },

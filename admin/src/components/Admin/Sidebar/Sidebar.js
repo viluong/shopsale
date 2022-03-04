@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
+      width: '256px'
     }),
   },
   drawerPaperClose: {

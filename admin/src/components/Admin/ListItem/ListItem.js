@@ -11,18 +11,6 @@ import Pagination from '@mui/material/Pagination';
 import Title from '../../UI/Title/Title';
 import Aux from '../../../hocs/HightAux/HightAux';
 
-// Generate Order Data
-const createData = (id, name, image) => {
-  return { id, name, image};
-}
-
-// const rows = [
-//   createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-//   createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-//   createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-//   createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-//   createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-// ];
 
 function preventDefault(event) {
   event.preventDefault();
@@ -55,40 +43,54 @@ const FooterContent = (onChangePaging, allowSeeMore, totalCount, classes) => {
   } else {
     return (      
       <div className={classes.paging}>
-        <Pagination count={ totalCount ? Math.ceil(totalCount / 5) : 1 } size="small" onChange={onChangePaging} />
+        <Pagination count={ (totalCount / 6) > Math.floor(totalCount / 6) ? Math.floor(totalCount / 6) + 1 : Math.floor(totalCount / 6) } size="small" onChange={onChangePaging} />
       </div>
     )
   }
 }
 
-const Categories = (props) => {
-  const { categories, allowSeeMore, title, totalCount, onChangePaging } = props;
-  const rows = categories.map(category => {
-    return createData(category.id, category.name, category.image_url)
-  })
-
+const ListItem = (props) => {
+  const { rowData, data, allowSeeMore, title, totalCount, onChangePaging, currentPage } = props;
+  const heightRow = props.heightRow ? props.heightRow : 60;
+  const rowPerPage = props.rowPerPage ? props.rowPerPage: 6;
   const classes = useStyles();
+  const emptyRows = currentPage > 0 ? Math.max(0, rowPerPage - data.length) : 0;
   return (
     <Aux>
       <Title>{title}</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Image</TableCell>
-            <TableCell>Name</TableCell>
+            {
+              rowData.map((row) => (
+                <TableCell>{row.label}</TableCell>
+              ))
+            }
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id} >
-              <TableCell size="small" href={`/category/${row.id}`} component="a">
-                  <img src={row.image} className={classes.image} alt={row.name}/>
-              </TableCell>
-              <TableCell href={`/category/${row.id}`} component="a">
-                  {row.name}
-              </TableCell>
+          {
+            data.map((item) => (
+              <TableRow style={{ height: heightRow }} key={item.id} onClick={props.handleClick}>
+                {
+                  rowData.map((row) => {
+                    return (
+                    <TableCell {...row.styles} >{
+                      row.renderValue ? 
+                        row.renderValue({...item, styleName: classes.image }) : 
+                          item[row.name]
+                      }
+                      </TableCell>)
+                  })
+                }
+              </TableRow>
+            ))
+          }
+          {emptyRows > 0 && (
+            <TableRow style={{ height: heightRow * emptyRows }}>
+              <TableCell colSpan={6} />
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
       {FooterContent(onChangePaging, allowSeeMore, totalCount, classes)}
@@ -96,4 +98,4 @@ const Categories = (props) => {
   );
 };
 
-export default Categories;
+export default ListItem;
