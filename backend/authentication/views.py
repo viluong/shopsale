@@ -7,11 +7,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import requests
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView, TokenViewBase
 
 from authentication.models import CustomUserManager, User
 from authentication.serializers import UserSerializer, MyTokenObtainPairSerializer, MyTokenRefreshSerializer, \
     MyTokenVerifySerializer
+from authentication.utils import google_request_oauth2
 
 
 class RegisterView(generics.CreateAPIView):
@@ -20,13 +21,12 @@ class RegisterView(generics.CreateAPIView):
 
 class GoogleView(APIView):
     def post(self, request):
-        payload = {'access_token': request.data.get("token")}  # validate the token
-        r = requests.get('https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
-        data = json.loads(r.text)
+
+        data = google_request_oauth2(request.data.get("token"))
 
         if 'error' in data:
             content = {'message': 'wrong google token / this google token is already expired.'}
-            return Response(content)
+            return Response(data=content, status=status.HTTP_401_UNAUTHORIZED)
 
         # create user if not exist
         try:
@@ -48,7 +48,8 @@ class GoogleView(APIView):
         response['user'] = user_serializer.data
         response['access'] = str(token.access_token)
         response['refresh'] = str(token)
-        response['expires_in'] = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()
+        response['token_expire_at'] = token.access_token.get('exp')
+        response['refresh_token_expire_at'] = token.get('exp')
         return Response(response)
 
 
@@ -56,7 +57,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
-class MyTokenRefreshView(TokenRefreshView):
+class MyTokenRefreshView(TokenViewBase):
     serializer_class = MyTokenRefreshSerializer
 
 
