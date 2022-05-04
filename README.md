@@ -19,7 +19,8 @@ Docker, Docker-compose
 1. Clone git source
 2. Cd to project
 3. Rename `./backend/.env-example` and `./frontend/.env-example` to `.env` and set variable enviroment.  
-4. Run `docker-compose up --build`
+4. Run `docker-compose build`
+5. Run `docker-compose up -d`
 
 ## Usage
 - Frontend: `http://localhost:3000/`
