@@ -96,15 +96,17 @@ class CategoryList(generics.ListCreateAPIView):
         return context
 
     def create(self, request, *args, **kwargs):
-        storage = FactoryStorage(settings.STORAGE_TYPE)
-        f = request.FILES['image']
-        url = os.path.join(image_categories_path(), f.name)
         data = request.data
-        data['image'] = url
+        if request.FILES:
+            storage = FactoryStorage(settings.STORAGE_TYPE)
+            f = request.FILES['image']
+            url = os.path.join(image_categories_path(), f.name)
+            data['image'] = url
+            storage.upload(f, image_categories_path())
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        storage.upload(f, image_categories_path())
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
@@ -131,3 +133,5 @@ class CartView(APIView):
     def post(self, request):
         products = get_products(request.data['product_ids'])
         return Response(products, status=status.HTTP_201_CREATED)
+
+

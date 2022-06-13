@@ -1,12 +1,13 @@
 from django.urls import path, include
 from shop import views
 
+
 urlpatterns = [
     path('auth/', include('authentication.urls')),
-    path('categories/', views.CategoryList.as_view()),
-    path('categories/<uuid:pk>/', views.CategoryDetail.as_view()),
+    path('categories/', views.CategoryList.as_view(), name="categories"),
+    path('categories/<uuid:pk>/', views.CategoryDetail.as_view(), name="detail-category"),
 
-    path('products/', views.ProductList.as_view()),
+    path('products/', views.ProductList.as_view(), name="products"),
     path('products/<uuid:pk>/', views.ProductDetail.as_view()),
 
     path('orders/', views.OrderView.as_view()),

@@ -10,8 +10,3 @@ else
     CREATE DATABASE $POSTGRES_DB;
     GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_DB TO $POSTGRES_USERNAME;"
 fi
-
-if [[ $INIT_DATA_SAMPLE -eq 1 ]]
-then
-	cat /backend/usr/app/dump.sql | psql $POSTGRES_DB
-fi

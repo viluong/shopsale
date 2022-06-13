@@ -11,7 +11,6 @@ class RegisterTestCase(TestCaseBase):
     def setUpClass(cls):
         super(RegisterTestCase, cls).setUpClass()
         cls.api_url = reverse('registration')
-        cls.user_exists = UserFactory.create()
         cls.user_build = UserFactory.build()
 
     def test_register_success(self):
@@ -28,6 +27,7 @@ class RegisterTestCase(TestCaseBase):
         self.assertEqual(user.email, self.user_build.email)
 
     def test_register_fail_with_user_exists(self):
+        self.user_exists = UserFactory.create()
         data = {
             'email': self.user_exists.email,
             'first_name': self.user_build.first_name,

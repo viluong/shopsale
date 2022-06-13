@@ -63,7 +63,9 @@ class Category(BaseModel):
     @property
     def image_url(self):
         url = get_url_storage()
-        return '{}/{}'.format(url, self.image)
+        if self.image:
+            return '{}/{}'.format(url, self.image)
+        return None
 
     def __str__(self):
         return self.name
@@ -82,7 +84,9 @@ class Product(BaseModel):
     @property
     def image_url(self):
         url = get_url_storage()
-        return '{}/{}'.format(url, self.image)
+        if self.image:
+            return '{}/{}'.format(url, self.image)
+        return None
 
     def __str__(self):
         return self.name
